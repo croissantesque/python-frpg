@@ -917,7 +917,7 @@ while True:
                     if hasattr(fished, "drops"):
                         for item, rarity in fished.drops.items():
                             if random.random() <= rarity:
-                                print(f"The {fished.name} dropped 1 {display_names['drop'][item]}!")
+                                print(f"The {fished.name} dropped 1 {display_names['drops'][item]}!")
                                 player.inventory["items"][item] = player.inventory["items"].get(item, 0) + 1
                                 
                             continue
