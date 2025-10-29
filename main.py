@@ -230,7 +230,7 @@ def shop(player):
             return
         
         
-        print(f"Money: ${player.inventory["coins"]}")
+        print(f"Money: ${player.inventory['coins']}")
         print("=== The Tackle Chest ===")
         print("=" * 40)
         stprint("  [1] --- Buy Bait")
@@ -272,12 +272,12 @@ def shop(player):
                 tprint('"Sorry mate, but it seems like you\'ve not enough money."')
                 continue
 
-            tprint(f"{display_names["baits"][selected_bait].capitalize()}: costs ${selected_price}. Purchase? (y/n)", 0.01)
+            tprint(f"{display_names['baits'][selected_bait].capitalize()}: costs ${selected_price}. Purchase? (y/n)", 0.01)
             confirm = input("> ")
             if confirm == "y":
                 player.inventory["coins"] -= selected_price
                 player.inventory["baits"][selected_bait] = player.inventory["baits"].get(selected_bait, 0) + 20
-                print(f"Spent ${selected_price} on {display_names["baits"][selected_bait]}. Use [baits] outside of The Tackle Chest to equip.")
+                print(f"Spent ${selected_price} on {display_names['baits'][selected_bait]}. Use [baits] outside of The Tackle Chest to equip.")
                 tprint(f'"There ya go, {player.name}! Have fun with \'em!"')
                 continue
             else:
@@ -677,7 +677,7 @@ def unlock_quest(quest):
     quests[quest]["status"] = "active"
 
 def check_quest_unlocked(player):
-    if 'night_goby' in player.inventory['fish'] and quests['']['status'] == 'hidden':
+    if 'night_goby' in player.inventory['fish'] and quests['bridge_to_misty_creek']['status'] == 'hidden':
         unlock_quest("bridge_to_misty_creek")
     if 'silverfin' in player.inventory['fish'] and quests['a_guide_by_scale']['status'] == 'hidden':
         unlock_quest("a_guide_by_scale")
@@ -899,7 +899,7 @@ while True:
     if time_of_day == "day": print(f"--- {(5 + turn - 1) % 24}:00 || Day")
     else: 
         if turn > 13: print(f"--- {(5 + turn - 1) % 24}:00 || Night")
-        else: print(f" --- {5 + turn - 1 % 12}:00 || Night/Early Morning")
+        else: print(f" --- {5 + turn - 13}:00 || Night/Early Morning")
 
     command = input("> ")
     if command in ["f", "fish"]:
@@ -917,7 +917,7 @@ while True:
                     if hasattr(fished, "drops"):
                         for item, rarity in fished.drops.items():
                             if random.random() <= rarity:
-                                print(f"The {fished.name} dropped 1 {display_names["drops"][item]}!")
+                                print(f"The {fished.name} dropped 1 {display_names['drop'][item]}!")
                                 player.inventory["items"][item] = player.inventory["items"].get(item, 0) + 1
                                 
                             continue
