@@ -5,23 +5,6 @@ import sys
 
 
 
-# TO DO:
-# more zones
-# QUESTS - INCREASE PLAYER SKILL,  + LUCK?
-
-
-#ZONE PLANNING
-# STARTING POND [0]: FARM WOOD PLANKS, MAGICAL RESIN, RARE IRON SHARDS
-# MISTY POND [1]: FARM IRON SHARDS, ITEM FROM FROGFISH OR GLOWFISH? CRYSTAL KOI USED LATER ON?
-# SHIMMERING BOOK [2] AND ON TO BE WORKED OUT
-
-#QUESTS
-# PLANKS FOR EARLY QUEST - BRIDGE FOR MISTY POND? BOATS MAYBE LATER ON
-# SHARDS USED FOR STEEL ROD AS WELL? 
-# MAGICAL RESIN: EARLY OPTIONAL QUEST FOR +LUCK?
-# WORKSHOP FOR QUEST HOME?
-# MINNOWS - COLLECT 50?
-
 
 time_of_day = "day"
 turn = 1
@@ -450,23 +433,7 @@ def workshop(player):
             active_quests = []
             complete_quests = []
             
-            for quest_id, quest_data in quests.items():
-                if quest_data["status"] == "hidden":
-                    # Check if player meets requirements to unlock
-                    can_unlock = True
-                    for requirement, needed in quest_data["requirements"].items():
-                        if requirement in display_names['drops']:
-                            if player.inventory["items"].get(requirement, 0) < needed:
-                                can_unlock = False
-                                break
-                        elif requirement in fish_name_map:
-                            fish_code = fish_name_map[requirement]
-                            if player.inventory["fish"].get(fish_code, 0) < needed:
-                                can_unlock = False
-                                break
-                    if can_unlock:
-                        quest_data["status"] = "active"
-            
+           
             for i, (quest_id, quest_data) in enumerate(quests.items(), 1):
                 if quest_data["status"] == "active": 
                     stprint(f"[{i}] --- {quest_data['name']}")
