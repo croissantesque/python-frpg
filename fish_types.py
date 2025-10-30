@@ -32,7 +32,7 @@ class SmallCarp(Fish):
             night_rarity = "Common",
             zones = [0, 1]
         )
-        self.drops = {"wood_plank": 0.10}
+        self.drops = {"wood_plank": 0.15}
         
 
 class Minnow(Fish):
@@ -80,7 +80,7 @@ class Shimmerfin(Fish):
             night_rarity = "Very Rare",
             zones = [0]
         )
-        self.drops = {"magical_resin": 0.33}
+        self.drops = {"magical_resin": 0.4}
 
 class Trout(Fish):
     def __init__(self):
