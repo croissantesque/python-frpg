@@ -398,6 +398,7 @@ def workshop(player):
                     continue
                 if int(craft_select) < 1 or int(craft_select) > len(available_recipes):
                     print("That's not an option...")
+                    continue
                 
                 selected_recipe_id, selected_recipe = available_recipes[int(craft_select) - 1]
                 
@@ -448,17 +449,49 @@ def workshop(player):
             unlocked_quests_list = []
             active_quests = []
             complete_quests = []
-            for i, (quest, data) in enumerate(quests.items(), 1):
-                if data["status"] == "active": 
-                    stprint(f"[{i}] --- {data['name']}")
-                    unlocked_quests_list.append(quest)
-                    active_quests.append(quest)
+            
+            for quest_id, quest_data in quests.items():
+                if quest_data["status"] == "hidden":
+                    # Check if player meets requirements to unlock
+                    can_unlock = True
+                    for requirement, needed in quest_data["requirements"].items():
+                        if requirement in display_names['drops']:
+                            if player.inventory["items"].get(requirement, 0) < needed:
+                                can_unlock = False
+                                break
+                        elif requirement in fish_name_map:
+                            fish_code = fish_name_map[requirement]
+                            if player.inventory["fish"].get(fish_code, 0) < needed:
+                                can_unlock = False
+                                break
+                    if can_unlock:
+                        quest_data["status"] = "active"
+            
+            for i, (quest_id, quest_data) in enumerate(quests.items(), 1):
+                if quest_data["status"] == "active": 
+                    stprint(f"[{i}] --- {quest_data['name']}")
+                    unlocked_quests_list.append(quest_id)
+                    active_quests.append(quest_id)
+                elif quest_data["status"] == "complete":
+                    unlocked_quests_list.append(quest_id)
+                    complete_quests.append(quest_id)
+            
+            if not unlocked_quests_list:
+                print("No quests available.")
+                print("[0] --- Back")
+                input("> ")
+                continue
+            
             print("\n--- Completed ---")
-            for i, (quest, data) in enumerate(quests.items(), len(unlocked_quests_list) + 1):
-                if data['status'] == "complete":
-                    stprint(f"[{i}] --- {data['name']}")
-                    unlocked_quests_list.append(quest)
-                    complete_quests.append(quest)
+            completed_display_list = []
+            for quest_id, quest_data in quests.items():
+                if quest_data["status"] == "complete":
+                    completed_display_list.append(quest_id)
+            
+            for i, quest_id in enumerate(completed_display_list, len(active_quests) + 1):
+                quest_data = quests[quest_id]
+                stprint(f"[{i}] --- {quest_data['name']}")
+            
             print("[0] --- Back")
 
             selection = input("> ")
@@ -466,32 +499,37 @@ def workshop(player):
             if not selection.isdigit():
                 print("That's not an option...")
                 continue
+            
             selection = int(selection)
-            if selection < 0 or selection > len(unlocked_quests_list):
-                print("That's not an option...")
-                continue
             if selection == 0:
+                continue
+            
+            if selection < 1 or selection > len(unlocked_quests_list):
+                print("That's not an option...")
                 continue
             
             selected_quest = unlocked_quests_list[selection - 1]
             selected_quest_data = quests[selected_quest]
+            
             if selected_quest in complete_quests:
                 stprint(f"{selected_quest_data['name']} || Complete")
                 stprint(f"{selected_quest_data['complete_description']}")
                 stprint("Requirements:")
                 for requirement, quantity in selected_quest_data['requirements'].items():
-                    if requirement in display_names['drops'].keys():
+                    if requirement in display_names['drops']:
                         stprint(f" - {display_names['drops'][requirement]}: {quantity}/{quantity}")
                     elif requirement in fish_name_map:
-                        stprint(f" - {requirement} | {quantity}/{quantity}")
+                        stprint(f" - {requirement}: {quantity}/{quantity}")
                 stprint("Rewards:")
                 for reward, quantity in selected_quest_data["rewards"].items():
                     if reward == "skill": 
                         print(f" - +{quantity} Skill")
-                    if reward in zones.keys():
+                    elif reward in zones:
                         print(f" - Unlocked {display_names['zones'][reward]}")
-                    if reward == "luck":
+                    elif reward == "luck":
                         print(f" - x{quantity} Fishing Luck")
+                    elif reward == "money":
+                        print(f" - ${quantity}")
                 tprint("Press <enter> to return...")
                 input("> ")
                 continue
@@ -502,36 +540,50 @@ def workshop(player):
                 stprint(f"Progress:")
                 total_reqs = 0
                 completed_reqs = 0
+                
                 for requirement, needed in selected_quest_data['requirements'].items():
                     total_reqs += 1
                     if requirement in display_names['drops']:
-                        stprint(f" - {display_names['drops'][requirement]} | {player.inventory['items'][requirement]}/{needed}")
-                        if player.inventory['items'][requirement] >= needed: completed_reqs += 1
+                        current = player.inventory['items'].get(requirement, 0)
+                        stprint(f" - {display_names['drops'][requirement]} | {current}/{needed}")
+                        if current >= needed: 
+                            completed_reqs += 1
                     elif requirement in fish_name_map:
                         code_name = fish_name_map[requirement]
-                        current = player.inventory['fish'][code_name]
-                        stprint(f" - {requirement} | {current}/{needed}")
-                        if current >= needed: completed_reqs += 1
+                        current = player.inventory['fish'].get(code_name, 0)
+                        fish_display = [k for k,v in fish_name_map.items() if v == code_name][0]
+                        stprint(f" - {fish_display} | {current}/{needed}")
+                        if current >= needed: 
+                            completed_reqs += 1
+                
                 if total_reqs == completed_reqs:
                     # confirm + complete!
                     tprint("You've fulfilled all the requirements! Finish Quest? (y/n) ")
                     confirm = input("> ")
-                    if confirm == "y":
+                    if confirm.lower() == "y":
+                        # Deduct resources
                         for requirement, quantity in selected_quest_data['requirements'].items():
                             if requirement in display_names["drops"]:
-                                player.inventory['items'][requirement] -= quantity
+                                player.inventory['items'][requirement] = player.inventory['items'].get(requirement, 0) - quantity
+                                if player.inventory['items'][requirement] <= 0:
+                                    del player.inventory['items'][requirement]
                             elif requirement in fish_name_map:
                                 fish_internal = fish_name_map[requirement]
                                 player.inventory['fish'][fish_internal] -= quantity
+                                if player.inventory['fish'][fish_internal] <= 0:
+                                    del player.inventory['fish'][fish_internal]
+                        
+                        # Apply rewards
                         for reward, spec in selected_quest_data['rewards'].items():
-                            if reward in display_names['zones']:
+                            if reward in zones:
                                 zones[reward] = True
                             elif reward == "skill": 
                                 player.fishing_skill += spec
                             elif reward == "luck":
-                                    player.luck = player.luck * spec
+                                player.luck = player.luck * spec
                             elif reward == "money":
                                 player.inventory["coins"] += spec
+                        
                         print("\n==============================")
                         stprint(f" QUEST COMPLETE: {selected_quest_data['name'].upper()} ")
                         print("==============================\n")
@@ -544,16 +596,16 @@ def workshop(player):
                                 stprint(f" - x{spec} Fishing Luck")
                             elif reward == "money": 
                                 stprint(f" - +{spec} coins!")
-                            elif reward in zones.keys():
+                            elif reward in zones:
                                 stprint(f" - {display_names['zones'][reward]} unlocked!")
-                            
+                        
                         selected_quest_data['status'] = "complete"
+                        player.completed_quests.add(selected_quest)
                     
                         stprint("\n==============================\n")
                         input("(press <enter> to continue)")
+                    else:
                         continue
-                        
-                    else: continue  
 
                 
             
@@ -899,7 +951,7 @@ while True:
     if time_of_day == "day": print(f"--- {(5 + turn - 1) % 24}:00 || Day")
     else: 
         if turn > 13: print(f"--- {(5 + turn - 1) % 24}:00 || Night")
-        else: print(f" --- {5 + turn - 13}:00 || Night/Early Morning")
+        else: print(f" --- {5 + turn - 12}:00 || Night/Early Morning")
 
     command = input("> ")
     if command in ["f", "fish"]:
