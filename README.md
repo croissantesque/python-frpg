@@ -1,9 +1,5 @@
 # python-frpg
 FRPG - simple terminal fishing adventure simulator
-# work in progress
 
-how to play:
-``` bash
-python main.py
-```
+(work in progress)
 instructions in-game
