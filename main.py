@@ -12,15 +12,94 @@ PERIOD_LENGTH = 12
 
 
 quests= {
-    "bridge_to_misty_creek": {"name": "The Bridge to Misty Creek", "rewards": {"skill": 1, "misty_creek": 1}, "requirements": {"wood_plank": 5}, "status": "hidden", "description": "The path to Misty Creek is blocked by a fallen bridge. Collect 5 Wood Planks and bring them to the Workshop so the bridge can be repaired.", "complete_description": "The path to Misty Creek is now open. You helped repair the bridge by delivering 5 wood planks." },
-    "a_guide_by_scale": {"name": "A Guide By Scale", "rewards": {"skill": 2, "luck": 1.05, "shimmering_brook": 1}, "requirements": {"silverfin": 1, "iron_shard": 3, "glow_scale": 3}, "status": "hidden", "description": "The Silverfin's scales confirm the old tales of the Shimmering Brook upstream. You'll need climbing tools and Glow Scales to mark your way.", "complete_description": "Following the path upstream, you find the Shimmering Brook. The water sparkles with the same light as the Silverfin's scales - you've found the source."},
-    "luminous_luck": {"name": "Luminous Luck", "rewards": {"money": 250, "luck": 1.08}, "requirements": {"glow_scale": 5}, "status": "hidden", "description": "Local legends say that collecting five Glow Scales and arranging them right brings fortune to the fisher. Perhaps there's truth to the tales?", "complete_description": "You've arranged the Glow Scales with the help of a local. They emit a soft, steady light as they hang around your neck. You feel luckier already!"}
+    "bridge_to_misty_creek": {
+        "name": "The Bridge to Misty Creek",
+        "rewards": {"skill": 1, "misty_creek": 1}, 
+        "requirements": {"wood_plank": 5}, 
+        "status": "hidden", 
+        "description": "The path to Misty Creek is blocked by a fallen bridge. Collect 5 Wood Planks and bring them to the Workshop so the bridge can be repaired.",
+        "complete_description": "The path to Misty Creek is now open. You helped repair the bridge by delivering 5 wood planks."
+    },
+
+    "pond_master": {
+        "name": "Pond Master",
+        "rewards": {"skill": 1, "money": 150, "luck": 1.03},
+        "requirements": {"small_carp": 1, "minnow": 1, "pond_perch": 1, "night_goby": 1, "shimmerfin": 1},
+        "status": "hidden",
+        "description": "Catch and deliver one of each of Beginner Pond's fish. Prove your foundational fishing skills!",
+        "complete_description": "You've mastered the Beginner's Pond! Your basic technique is now flawless, making all future fishing easier."
+    },
+
+    "creek_master": {
+        "name": "Misty Creek Master",
+        "rewards": {"skill": 1, "money": 250, "luck": 1.04},
+        "requirements": {"small_carp": 1, "minnow": 1, "trout": 1, "bass": 1, "glowfish": 1, "frogfish": 1, "silverfin": 1, "crystal_koi": 1},
+        "status": "hidden",
+        "description": "Conquer Misty Creek's diverse fish. Each fish teaches a different angling technique.", 
+        "complete_description": "You've mastered the marine life of Misty Creek! Your versatility as a fisherman is notable."
+    },
+
+    "a_guide_by_scale": {
+        "name": "A Guide By Scale", 
+        "rewards": {"skill": 2, "luck": 1.05, "shimmering_brook": 1}, 
+        "requirements": {"silverfin": 1, "iron_shard": 3, "glow_scale": 3}, 
+        "status": "hidden", 
+        "description": "The Silverfin's scales confirm the old tales of the Shimmering Brook upstream. You'll need climbing tools and Glow Scales to mark your way.", 
+        "complete_description": "Following the path upstream, you find the Shimmering Brook. The water sparkles with the same light as the Silverfin's scales - you've found the source."
+    },
+
+    
+    "brook_master": {
+        "name": "Shimmering Brook Master",
+        "rewards": {"skill": 1, "money": 350, "luck": 1.03},
+        "requirements": {"minnow": 1, "rapidfin_trout": 1, "carp": 1, "perch": 1, "shadowfin": 1, "azure_gill": 1},
+        "status": "hidden", 
+        "description": "The Shimmering Brook ecosystem requires specialized knowledge. Catch 'em all!",
+        "complete_description": "You've unraveled the mysteries of Shimmering Brook! Your precision has sharpened."
+    },
+
+    "luminous_luck": {
+        "name": "Luminous Luck", 
+        "rewards": {"money": 250, "luck": 1.08}, 
+        "requirements": {"glow_scale": 5}, 
+        "status": "hidden", 
+        "description": "Local legends say that collecting five Glow Scales and arranging them right brings fortune to the fisher. Perhaps there's truth to the tales?", 
+        "complete_description": "You've arranged the Glow Scales with the help of a local. They emit a soft, steady light as they hang around your neck. You feel luckier already!"
+    },
+    
+    "crystal_lake_expedition": {
+        "name": "The Crystal Lake Expedition", 
+        "rewards": {"skill": 2, "crystal_lake": 1},
+        "requirements": {"crystal_koi": 1, "glow_scale": 5, "river_pearl": 4},
+        "status": "hidden",
+        "description": "The Crystal Koi proves the legends of a pristine high-altitude lake. You'll need light sources and purification pearls to reach it.",
+        "complete_description": "You've reached the legendary Crystal Lake! The waters are so clear you can see straight to the bottom."
+    },
+
+    "lake_master": {
+        "name": "Lake Master",
+        "rewards": {"skill": 2, "money": 300, "luck": 1.08},
+        "requirements": {"moonlight_guppy": 1, "deepwater_sturgeon": 1, "prism_trout": 1, "abyssal_angler": 1, "lunar_trout": 1},
+        "status": "hidden",
+        "description": "Master the powerful Crystal Lake by catching each of its mystical inhabitants.",
+        "complete_description": "You are a conqueror of Crystal Lake! An achievement notable at even the highest ranks of fishermen."
+    },
+
+    "lake_guardian": {
+        "name": "The Lake Guardian",
+        "rewards": {"skill": 2, "money": 800, "luck": 1.1},
+        "status": "hidden",
+        "requirements": {"ghost_carp": 1},
+        "description": "The lake's legendary mystery awaits. Prove your worth by catching the fabled Ghost Carp.",
+        "complete_description": "You've finally captured the rumoured guardian of the lake! You are a true master of these waters."
+    }
 }
 
 zones = {
     "beginners_pond": True,
     "misty_creek": False,
-    "shimmering_brook": False
+    "shimmering_brook": False,
+    "crystal_lake": False
 }
 
 crafting_recipes = {
@@ -32,30 +111,81 @@ crafting_recipes = {
             "magical_resin": 1
         },
         "cost": 200,
-        "unlock_zone": "beginners_pond",  # Available from start
+        "unlock_zone": "beginners_pond",  
         "description": "A sturdy iron rod for tougher fish.",
         "type": "rod"
     },
     "azure_rod": {
         "name": "Azure Rod", 
         "requirements": {
-            "azure_fin": 3,
-            "river_pearl": 2,
-            "iron_shard": 5
+            "azure_fin": 4,
+            "river_pearl": 4,
+            "iron_shard": 3
         },
         "cost": 300,
-        "unlock_zone": "shimmering_brook",  # Only after unlocking this zone
+        "unlock_zone": "shimmering_brook",  
         "description": "A magical rod that brings good fortune to your fishing.",
         'type': "rod"
-    }
-    # Add more recipes here as you create them
+    },
+        "crystal_rod": {
+        "name": "Crystal Rod",
+        "requirements": {
+            "crystal_shard": 3,
+            "moonstone": 2, 
+            "magical_resin": 2
+        },
+        "cost": 500,
+        "unlock_zone": "crystal_lake",
+        "description": "A rod made from Crystal Lake materials, excellent for finding rare fish.",
+        "type": "rod"
+    },
+    "lunar_lure": {
+        "name": "Lunar Lure",
+        "requirements": {
+            "glow_scale": 3,
+            "moonstone": 1,
+            "river_pearl": 1
+        },
+        "cost": 100,
+        "unlock_zone": "crystal_lake",
+        "description": "Glows with moonlight, attracting rare nocturnal fish. Comes in packs of 15.",
+        "type": "bait",
+        "quantity": 15
+    },
 }
+
+fish_descriptions = {
+    "small_carp": "It nibbles on everything it finds. Its constant chewing strengthens its surprisingly tough teeth.",
+    "minnow": "This tiny fish swims at incredible speeds. It appears as a silver blur in the water. [Fast]",
+    "pond_perch": "Known for its energetic leaps from the water. Each jump can reach surprising heights. [Jumpy]",
+    "night_goby": "Active only after dark. It uses its whiskers to find food in complete darkness. [Nocturnal]",
+    "shimmerfin": "Its scales shimmer with rainbow colors. Many seek it for its beautiful appearance. [Glows]",
+    "trout": "A powerful swimmer that thrives in cold water. It battles fiercely when hooked. [Fast]",
+    "bass": "This aggressive predator strikes without warning. Its large mouth can swallow prey whole. [Strong]",
+    "glowfish": "It glows with mystical blue light. The glow intensifies during nighttime hours. [Glows]",
+    "frogfish": "Camouflages perfectly with river bottoms. It hops along the floor like a frog. [Camouflage] [Jumpy]",
+    "silverfin": "So slippery it's nearly impossible to hold. It escapes from most predators with ease. [Evasive]",
+    "crystal_koi": "Considered a living jewel. Its translucent body sparkles like fine crystal. [Glows]",
+    "rapidfin_trout": "Its fins move so fast they hum. This helps it swim against strong currents. [Fast] [Strong]",
+    "carp": "A bottom-feeder that stirs up mud. It grows larger with each passing year. [Strong]",
+    "perch": "Its sharp dorsal spines contain mild venom. Handle this feisty fish with care! [Jumpy]",
+    "shadowfin": "Blends perfectly with dark waters. It strikes when prey least expects it. [Camouflage] [Evasive]",
+    "azure_gill": "Emits a soft blue glow when excited. Known for its spectacular jumping displays. [Glows] [Jumpy]",
+    "moonlight_guppy": "Tiny fish that absorb moonlight, creating a soft glow. They move in shimmering schools through the dark waters. [Glows]",
+    "deepwater_sturgeon": "Ancient bottom-feeders with armored plates. They've adapted to the crushing pressures of the lake's deepest trenches. [Strong] [Camouflage]",
+    "prism_trout": "Their scales refract light into rainbow patterns. Each movement creates a dazzling display of colors in the clear water. [Glows] [Evasive]",
+    "abyssal_angler": "Uses a natural bioluminescent lure to attract prey in the dark depths. Its sharp teeth can cut through fishing line. [Glows] [Strong]",
+    "lunar_trout": "Synchronized with the moon's cycles. Becomes more active and energetic during full moon nights. [Nocturnal] [Jumpy]",
+    "ghost_carp": "So pale it's nearly transparent. Legends say it's the spirit of the lake itself, rarely seen by mortal eyes. [Camouflage]"
+}
+
 
 display_names = {
     "zones": {
         "beginners_pond": "Beginner's Pond",
         "misty_creek": "Misty Creek",
-        "shimmering_brook": "Shimmering Brook"
+        "shimmering_brook": "Shimmering Brook",
+        "crystal_lake": "Crystal Lake"
     },
 
     "rods": {
@@ -73,7 +203,10 @@ display_names = {
         "magical_resin": "Magical Resin",
         "river_pearl": "River Pearl",
         "azure_fin": "Azure Fin",
-        "glow_scale": "Glow Scale"
+        "glow_scale": "Glow Scale",
+        "crystal_shard": "Crystal Shard",
+        "moonstone": "Moonstone",
+        "spectral_fin": "Spectral Fin"
     },
     "baits": {
         "worm": "worms",
@@ -92,47 +225,54 @@ display_names = {
 
 
 fish_classes = {
-    "SmallCarp": fish_types.SmallCarp,
-    "Minnow": fish_types.Minnow,
-    "PondPerch": fish_types.PondPerch,
-    "NightGoby": fish_types.NightGoby,
-    "Shimmerfin": fish_types.Shimmerfin,
-    "Trout": fish_types.Trout,
-    "Bass": fish_types.Bass,
-    "Glowfish": fish_types.Glowfish,
-    "Frogfish": fish_types.Frogfish,
-    "Silverfin": fish_types.Silverfin,
-    "CrystalKoi": fish_types.CrystalKoi,
-    "RapidfinTrout": fish_types.RapidfinTrout,
-    "Carp": fish_types.BrookCarp,
-    "Perch": fish_types.BrookPerch,
-    "Shadowfin": fish_types.Shadowfin,
-    "AzureGill": fish_types.AzureGill,
+    "small_carp": fish_types.SmallCarp,
+    "minnow": fish_types.Minnow,
+    "pond_perch": fish_types.PondPerch,
+    "night_goby": fish_types.NightGoby,
+    "shimmerfin": fish_types.Shimmerfin,
+    "trout": fish_types.Trout,
+    "bass": fish_types.Bass,
+    "glowfish": fish_types.Glowfish,
+    "frogfish": fish_types.Frogfish,
+    "silverfin": fish_types.Silverfin,
+    "crystal_koi": fish_types.CrystalKoi,
+    "rapidfin_trout": fish_types.RapidfinTrout,
+    "carp": fish_types.BrookCarp,
+    "perch": fish_types.BrookPerch,
+    "shadowfin": fish_types.Shadowfin,
+    "azure_gill": fish_types.AzureGill,
+    "moonlight_guppy": fish_types.MoonlightGuppy,
+    "deepwater_sturgeon": fish_types.DeepwaterSturgeon, 
+    "prism_trout": fish_types.PrismTrout,
+    "abyssal_angler": fish_types.AbyssalAngler,
+    "lunar_trout": fish_types.LunarTrout,
+    "ghost_carp": fish_types.GhostCarp
 }
 
 all_fish = list(fish_classes.keys())
 
 rods = {
-    "wooden_rod": (1, 1.1),
+    "wooden_rod": (1, 1.05),
     "iron_rod": (1.5, 1),  
-    "azure_rod": (1.3, 1.3),     
-    "steel_rod": (2.5, 1),     
-
+    "azure_rod": (1.4, 1.1),     
+    "steel_rod": (2.2, 1),     
+    "crystal_rod": (2, 1.25),
 }
 
 baits = {
-    "worm": 0,           # default, no bonus
-    "insects": 1,      #cost money from here on
+    "worm": 0,          
+    "insects": 1,      
     "shimmerbait": 2,   
     "glowworms": 3,    
-    "golden_grubs": 5  
+    "golden_grubs": 5,
+    "lunar_lure": 2
 }
 
 shop_prices = {
     "bait": {
-        "insects": 100,
-        "shimmerbait": 300,
-        "glowworms": 600,
+        "insects": 80,
+        "shimmerbait": 180,
+        "glowworms": 500,
         "golden_grubs": 1300
     },
 
@@ -153,6 +293,24 @@ shop_prices = {
         "perch": 60,           
         "shadowfin": 45,        
         "azure_gill": 100,
+        "moonlight_guppy": 45,
+        "deepwater_sturgeon": 90,
+        "prism_trout": 160,
+        "abyssal_angler": 100,
+        "lunar_trout": 95,
+        "ghost_carp": 800
+    },
+
+    "drops": {
+        "wood_plank": 8,
+        "iron_shard": 15, 
+        "magical_resin": 50,
+        "river_pearl": 65,
+        "azure_fin": 60,
+        "glow_scale": 35,
+        "crystal_shard": 80,
+        "moonstone": 120,
+        "spectral_fin": 300
     }
 
 }
@@ -173,7 +331,13 @@ fish_name_map = {
     "Carp": "carp", 
     "Perch": "perch",
     "Shadowfin": "shadowfin",
-    "Azure Gill": "azure_gill"
+    "Azure Gill": "azure_gill",
+    "Moonlight Guppy": "moonlight_guppy",
+    "Deepwater Sturgeon": "deepwater_sturgeon", 
+    "Prism Trout": "prism_trout",
+    "Abyssal Angler": "abyssal_angler",
+    "Lunar Trout": "lunar_trout",
+    "Ghost Carp": "ghost_carp"
 
 }
 
@@ -193,7 +357,13 @@ fish_displays = {
     "carp": "Carp",
     "perch": "Perch", 
     "shadowfin": "Shadowfin",
-    "azure_gill": "Azure Gill"
+    "azure_gill": "Azure Gill",
+    "moonlight_guppy": "Moonlight Guppy",
+    "deepwater_sturgeon": "Deepwater Sturgeon",
+    "prism_trout": "Prism Trout", 
+    "abyssal_angler": "Abyssal Angler",
+    "lunar_trout": "Lunar Trout",
+    "ghost_carp": "Ghost Carp"
 }
 
 class Player:
@@ -203,21 +373,97 @@ class Player:
         self.luck = 1
         self.gear = {"rod": "wooden_rod", "bait": "worm"}
         self.inventory = {"fish": {}, "coins": 0, "items": {}, "rods": {}, "baits": {"worm": 10}}
-        self.completed_quests = set()
         self.zone = 0
+        self.dex = {}
 
 def shop(player):
     while True:
+
+        shop_names = {
+            0: "Tackle Chest",
+            1: "Rusty Hook",
+            2: "Silver Scale",
+            3: "Crystal Market"
+          }
+        
+        shop_flavor = {
+    0: {  # Beginner's Pond - Tackle Chest
+        "welcome": f'"Hey there, {player.name}! Fresh bait just came in - take a look!"',
+        "no_money": '"Tight on coins, eh? The pond\'s full of fish waiting to be caught!"',
+        "thanks": '"There ya go! Those fish won\'t know what hit \'em!"',
+        "closed": "The Tackle Chest is closed during night hours. Come back tomorrow.",
+        "exit": f'"Come back soon, {player.name}! Don\'t let those fish get too comfortable!"',
+        "invalid": '"Huh? You\'ll have to speak clearer, friend!"',
+        "invalid_bait": '"That\'s not how we count bait around here, mate!"',
+        "invalid_fish": '"I don\'t think they make fish in that number!"',
+        "invalid_item": '"Now what kind of item number is that?"',
+        "cancel_bait": '"Changed your mind? No worries, take your time!"',
+        "cancel_fish": '"No sale? The fish\'ll still be there tomorrow!"',
+        "cancel_item": '"Keeping your treasures? Can\'t blame ya!"',
+        "no_fish": '"No fish to sell? The pond\'s right there, mate!"',
+        "no_items": '"Nothing to sell? Keep fishing - you\'ll find something!"'
+    },
+    1: {  # Misty Creek - Rusty Hook
+        "welcome": '"What d\'ya need? I don\'t got all day for chit-chat."',
+        "no_money": '"No coin, no bait. Simple as that."',
+        "thanks": '"There. Now quit loitering."',
+        "closed": "The Rusty Hook is shut tight. A sign says 'Closed - Gone Fishin'.",
+        "exit": '"Don\'t bother me unless you\'re buying."',
+        "invalid": '"Speak up or get out."',
+        "invalid_bait": '"Numbers. Use \'em."',
+        "invalid_fish": '"You counting fish that don\'t exist?"',
+        "invalid_item": '"That ain\'t a real item."',
+        "cancel_bait": '"Wasting my time. Typical."',
+        "cancel_fish": '"Make up your mind next time."',
+        "cancel_item": '"Can\'t decide? Figures."',
+        "no_fish": '"No fish? What are you even doing here?"',
+        "no_items": '"Empty pockets? Come back when you\'ve got something."'
+    },
+    2: {  # Shimmering Brook - Silver Scale
+        "welcome": '"Welcome, discerning angler. Our selection is... curated for those with particular tastes."',
+        "no_money": '"I\'m afraid our standards are rather exclusive. Perhaps when your means improve."',
+        "thanks": '"An excellent choice. May it bring you fortune on the waters."',
+        "closed": "The Silver Scale is closed. Through the window, you see elegant displays being covered for the night.",
+        "exit": '"Do return when you require the finest angling supplies."',
+        "invalid": '"I beg your pardon? Could you clarify?"',
+        "invalid_bait": '"Our inventory is meticulously numbered. Please use the system."',
+        "invalid_fish": '"I believe you\'ve misread our catalog."',
+        "invalid_item": '"That selection doesn\'t appear in our registry."',
+        "cancel_bait": '"A prudent reconsideration. Quality over haste."',
+        "cancel_fish": '"Perhaps another time, when you\'re more certain."',
+        "cancel_item": '"Discretion is the better part of commerce."',
+        "no_fish": '"No specimens to offer? The brook awaits your skilled hand."',
+        "no_items": '"No materials for trade? The waters hold many secrets yet."'
+    },
+    3: {  # Crystal Lake - Crystal Market
+        "welcome": '"The waters call to you... as they call to all who seek what lies beneath."',
+        "no_money": '"The lake\'s treasures require sacrifice. Return when you are prepared."',
+        "thanks": '"May the crystal waters guide your line to wonders unseen."',
+        "closed": "The Crystal Market vanishes into the mist at night, as if it were never there.",
+        "exit": '"The lake holds many secrets... and so do I."',
+        "invalid": '"The currents of meaning are unclear... speak plainly."',
+        "invalid_bait": '"The numbers dance, but not in that pattern."',
+        "invalid_fish": '"That quantity echoes in empty waters."',
+        "invalid_item": '"That choice ripples without substance."',
+        "cancel_bait": '"The bait returns to the depths, waiting."',
+        "cancel_fish": '"The fish swim free for another day."',
+        "cancel_item": '"Some treasures are meant to be kept."',
+        "no_fish": '"The lake gives nothing to idle hands. Cast your line deeper."',
+        "no_items": '"The crystals remain silent. You have nothing they desire."'
+    }
+}
+
         if time_of_day == "night":
-            tprint("The Tackle Chest is closed during night hours. Come back tomorrow.", 0.02)
+            tprint(shop_flavor[player.zone]['closed'], 0.02)
             return
         
         
         print(f"Money: ${player.inventory['coins']}")
-        print("=== The Tackle Chest ===")
+        print(f"=== The {shop_names[player.zone]} ===")
         print("=" * 40)
         stprint("  [1] --- Buy Bait")
         stprint("  [2] --- Sell Fish")
+        stprint("  [3] --- Sell Items")
         stprint("  [0] --- Exit Shop")
 
         main_selection = input("> ")
@@ -230,7 +476,7 @@ def shop(player):
                 "4": "golden_grubs"
             }
 
-            tprint(f'"Hey there, {player.name}! Take a look around, we sell bait in packs of 20."')
+            tprint(shop_flavor[player.zone]['welcome'])
             
             stprint(f"[1] --- Insects")
             stprint(f"[2] --- Shimmerbait")
@@ -241,7 +487,7 @@ def shop(player):
 
             bait_selection = input("> ")
             if bait_selection not in ["1", "2", "3", "4", "0"]:
-                print("That's not an option...")
+                tprint(shop_flavor[player.zone]['invalid_bait'])
                 continue
 
             if bait_selection == "0":
@@ -252,7 +498,7 @@ def shop(player):
             selected_price = shop_prices["bait"][selected_bait]
 
             if player.inventory["coins"] < selected_price:
-                tprint('"Sorry mate, but it seems like you\'ve not enough money."')
+                tprint(shop_flavor[player.zone]['no_money'])
                 continue
 
             tprint(f"{display_names['baits'][selected_bait].capitalize()}: costs ${selected_price}. Purchase? (y/n)", 0.01)
@@ -261,21 +507,20 @@ def shop(player):
                 player.inventory["coins"] -= selected_price
                 player.inventory["baits"][selected_bait] = player.inventory["baits"].get(selected_bait, 0) + 20
                 print(f"Spent ${selected_price} on {display_names['baits'][selected_bait]}. Use [baits] outside of The Tackle Chest to equip.")
-                tprint(f'"There ya go, {player.name}! Have fun with \'em!"')
+                tprint(shop_flavor[player.zone]['thanks'])
                 continue
             else:
-                tprint('"Alright, maybe next time, eh?"')
+                tprint(shop_flavor[player.zone]['cancel_bait'])
                 continue
             
             
             
         elif main_selection == "2":
-            tprint('"Ah, looking to sell some of your catches? You\'ve found the right place!"')
             
             fish_inventory = player.inventory["fish"]
 
             if not fish_inventory: 
-                tprint('"Hmm, seems like you don\'t have any fish to sell. Go catch some first!"')
+                tprint(shop_flavor[player.zone]['no_fish'])
                 continue
             
             fish_list = list(fish_inventory.keys())
@@ -293,44 +538,179 @@ def shop(player):
                 continue
             
             elif not fish_selection.isdigit():
-                print("That's not an option...")
+                tprint(shop_flavor[player.zone]['invalid_fish'])
                 continue
             elif int(fish_selection) < 1 or int(fish_selection) > len(fish_list):
-                print("That's not an option... ")
+                tprint(shop_flavor[player.zone]['invalid_fish'])
                 continue
 
 
             selected_fish = fish_list[int(fish_selection) - 1]
             fish_external = fish_displays[selected_fish]
-            quantity = fish_inventory[selected_fish]
-            price_fetched = shop_prices["fish"][selected_fish] * fish_inventory[selected_fish]
 
-            print(f"{fish_displays[selected_fish]}: Sell x{quantity} for ${price_fetched}? (y/n)")
-            confirm = input("> ")
-            
-            if confirm == "y":
+            print(f"{fish_external}: How many would you like to sell?")
+            quantity = input("> ")
+            if not quantity.isdigit(): 
+                tprint(shop_flavor[player.zone]['invalid_fish'])
+                continue
+            quantity = int(quantity)
+            if quantity > player.inventory['fish'][selected_fish]:
+                tprint(shop_flavor[player.zone]['invalid_fish'])
+                continue
+            if quantity == 0:
+                tprint(shop_flavor[player.zone]['cancel_fish'])
+                continue
+
+            price_fetched = shop_prices["fish"][selected_fish] * quantity
+
+            player.inventory["fish"][selected_fish] -= quantity
+            if player.inventory["fish"][selected_fish] == 0:
                 del player.inventory["fish"][selected_fish]
-                player.inventory["coins"] += price_fetched
-                print(f"Sold {quantity} {fish_displays[selected_fish]} for ${price_fetched}.")
-                tprint('"There\'s your cash, kid! Good doing business with ya!"')
+            player.inventory["coins"] += price_fetched
+
+            print(f"Sold {fish_external} x{quantity} for ${price_fetched}.")
+            tprint(shop_flavor[player.zone]['thanks'])
+            continue
+        
+        if main_selection == "3":
+
+            
+            drop_inventory = player.inventory["items"]
+
+            if not drop_inventory: 
+                tprint(shop_flavor[player.zone]['no_items'])
+                input("> ")
                 continue
-            else: 
-                print("Sale canceled.")
-                tprint('"Nah? Maybe another time, then."')
+            
+            drop_list = list(drop_inventory.keys())
+
+            for i, (drop_id, quantity) in enumerate(drop_inventory.items(), 1):
+                drop_name = display_names['drops'].get(drop_id, drop_id)
+                print(f"[{i}] --- {drop_name} (x{quantity})")
+                time.sleep(0.04)
+            print("[0] --- Back")
+
+
+            drop_selection = input("> ")
+
+            if drop_selection == "0":
                 continue
+            
+            elif not drop_selection.isdigit():
+                tprint(shop_flavor[player.zone]['invalid_item'])
+                continue
+            elif int(drop_selection) < 1 or int(drop_selection) > len(drop_list):
+                tprint(shop_flavor[player.zone]['invalid_item'])
+                continue
+
+
+            selected_item = drop_list[int(drop_selection) - 1]
+            drop_external = display_names['drops'][selected_item]
+
+            print(f"{drop_external}: How many would you like to sell?")
+            quantity = input("> ")
+            if not quantity.isdigit(): 
+                tprint(shop_flavor[player.zone]['invalid_item'])
+                continue
+            quantity = int(quantity)
+            if quantity > player.inventory['items'][selected_item]:
+                tprint(shop_flavor[player.zone]['invalid_item'])
+                continue
+            if quantity == 0:
+                tprint(shop_flavor[player.zone]['cancel_item'])
+                continue
+
+            price_fetched = shop_prices["drops"][selected_item] * quantity
+
+            player.inventory["items"][selected_item] -= quantity
+            if player.inventory["items"][selected_item] == 0:
+                del player.inventory["items"][selected_item]
+            player.inventory["coins"] += price_fetched
+
+            print(f"Sold {drop_external} x{quantity} for ${price_fetched}.")
+            tprint(shop_flavor[player.zone]['thanks'])
+            continue
 
         else: 
-            tprint(f'"Come back again, {player.name}! Don\'t let those fish bite without you."')
+            tprint(shop_flavor[player.zone]['exit'])
             return
 
 def workshop(player):
+
+    workshop_flavor = {
+    0: {  # Beginner's Pond - Grumpy Old Craftsman
+        "welcome": '"*grunt* What do you want? Can\'t you see I\'m busy?"',
+        "day_closed": '"Workshop\'s closed! Come back when the moon\'s out."',
+        "exit": '"About time. Don\'t track mud on your way out."',
+        "invalid": '"Eh? Speak proper or don\'t speak at all."',
+        "no_recipes": '"Nothing for greenhorns like you. Come back when you\'ve actually caught something."',
+        "no_quests": '"No handouts here. Earn your keep first."',
+        f"craft_success": '"There. A new rod. Try not to break it like the last one."',
+        "craft_fail": '"You call that a proper offering? Come back with real materials."',
+        "craft_cancel": '"Wasting my time. Should\'ve known."',
+        f"bait_success": '"There, special bait. Don\'t expect miracles."',
+        "bait_fail": '"Not enough. My workshop isn\'t a charity."',
+        "quest_complete": '"*mumbles* Not completely useless, I suppose."',
+        "quest_view": '"These are the tasks. Take \'em or leave \'em."',
+        "working": '"*hammering noises* Can\'t you see I\'m working here?"'
+    },
+    1: {  # Misty Creek - Eccentric Inventor
+        "welcome": '"Aha! A test subject! I mean... customer! What marvelous contraption can I build for you today?"',
+        "day_closed": '"The workshop is... undergoing... recalibration! Yes! Come back tonight!"',
+        "exit": '"Farewell! Tell the fish I\'m working on something... spectacular!"',
+        "invalid": '"That input doesn\'t compute with my magnificent brain!"',
+        "no_recipes": '"My genius requires more... exotic materials! Bring me creek treasures!"',
+        "no_quests": '"No experiments running at the moment! Science must wait!"',
+        f"craft_success": '"BEHOLD!! My greatest invention yet! Probably!"',
+        "craft_fail": '"The quantum flux capacitors are misaligned! More materials required!"',
+        "craft_cancel": '"Aborting the creative process! The tragedy! The humanity!"',
+        f"bait_success": '"Bait!!! It might attract fish! Or aliens! Science will tell!"',
+        "bait_fail": '"Insufficient anomalous particles! The creek hides more secrets!"',
+        "quest_complete": '"DATA COLLECTED! Hypothesis: You\'re actually competent!"',
+        "quest_view": '"Observe my brilliant field tests! I mean... quests!"',
+        "working": '"EUREKA! No, wait, false alarm. Carry on."'
+    },
+    2: {  # Shimmering Brook - Mystical Artisan
+        "welcome": '"The silver threads of fate have drawn you here. What creation calls to your imagination?"',
+        "day_closed": '"The workshop slumbers while sunlight dances on the water. Return when shadows lengthen."',
+        "exit": '"Go with the current\'s blessing. May your line find what your heart seeks."',
+        "invalid": '"Your words scatter like leaves on the water. Choose with intention."',
+        "no_recipes": '"The brook has not yet whispered the patterns you seek. Patience, child of the water."',
+        "no_quests": '"The flowing ones have set no trials for you. Your path unfolds differently."',
+        f"craft_success": '"From water\'s memory and starlight\'s touch... May it serve your journey well."',
+        "craft_fail": '"The elements do not align. The brook asks for more of its essence."',
+        "craft_cancel": '"Some creations must wait for their proper moment. You are wise to listen."',
+        f"bait_success": '"Here is your bait. It carries the brook\'s own song. Use it with respect."',
+        "bait_fail": '"The balance of elements is incomplete. The silver waters offer more to those who listen."',
+        "quest_complete": '"The flowing ones are pleased. You honor the ancient pact between angler and water."',
+        "quest_view": '"These are the tasks the water has woven into your path. Each completes a pattern in the great flow."',
+        "working": '"*humming* The water sings through my hands... the patterns emerge..."'
+    },
+    3: {  # Crystal Lake - Practical Mountaineer
+        "welcome": '"Took you long enough to find this place. I don\'t work with amateurs - show me what you\'ve got."',
+        "day_closed": '"Workshop\'s closed. I\'m out surveying the lake. Come back after dark."',
+        "exit": '"Watch your step on the way down. These cliffs don\'t forgive mistakes."',
+        "invalid": '"Speak clearly. The thin air getting to you already?"',
+        "no_recipes": '"You\'re not ready for high-altitude gear. Come back when you\'ve braved the deeper waters."',
+        "no_quests": '"No tasks for you. The lake tests everyone in its own way."',
+        f"craft_success": '"There. Built to handle pressure you can\'t even imagine."',
+        "craft_fail": '"Not enough quality materials. The lake doesn\'t give up its treasures easily."',
+        "craft_cancel": '"Smart. High-altitude gear isn\'t for the uncertain."',
+        f"bait_success": '"Fancy bait. Works better when your hands aren\'t shaking from the cold."',
+        "bait_fail": '"You\'re short on materials. The crystal deposits are deeper than you think."',
+        "quest_complete": '"You handled that better than most. Maybe you\'ve got what it takes for these waters."',
+        "quest_view": '"These are the jobs that need doing up here. Take your pick if you think you can handle it."',
+        "working": '"*sharpening tools* High-altitude maintenance. Never ends."'
+    }
+}
+
     if time_of_day == "day":
-        print("The Workshop's closed during the day. Come back tonight?")
+        tprint(workshop_flavor[player.zone]["day_closed"])
         return
     while True:
         print("=== Workshop ===")
         print("=" * 40)
-        tprint('"Whaddya want? it\'s late, kid."')
+        tprint(workshop_flavor[player.zone]["welcome"])
         
         stprint("[1] --- Crafting")
         stprint("[2] --- Quests")
@@ -339,22 +719,24 @@ def workshop(player):
         main_select = input("> ")
 
         if main_select not in ["1", "2", "0"]: 
-            tprint('"I don\'t got time for nonsense. Pick a real option."')
+            tprint(workshop_flavor[player.zone]["invalid"])
             continue
         if main_select == "0":
-            tprint('"Off you go, then. Don\'t trip over the doorway."')
+            tprint(workshop_flavor[player.zone]["exit"])
             return
+
         if main_select == "1":
             print("=== Crafting ===")
             stprint("[1] --- Rods")
+            stprint("[2] --- Baits")  
             stprint("[0] --- Back\n")
             selection = input("> ")
-            if selection not in ["1", "0"]:
-                print("That's not an option...")
+            if selection not in ["1", "2", "0"]:
+                tprint(workshop_flavor[player.zone]["invalid"])
                 continue
 
-            if selection =="0":
-                print("Returning...")
+            if selection == "0":
+                tprint(workshop_flavor[player.zone]["working"])
                 continue
 
             if selection == "1":
@@ -364,7 +746,7 @@ def workshop(player):
                         available_recipes.append((recipe_id, recipe_data))
                 
                 if not available_recipes:
-                    tprint('"Nothing you can craft right now. Come back when you\'ve unlocked more areas."')
+                    tprint(workshop_flavor[player.zone]["no_recipes"])
                     continue
                 
                 for i, (recipe_id, recipe_data) in enumerate(available_recipes, 1):
@@ -377,10 +759,10 @@ def workshop(player):
                     continue
                 
                 if not craft_select.isdigit():
-                    print('That\'s not an option...')
+                    tprint(workshop_flavor[player.zone]["invalid"])
                     continue
                 if int(craft_select) < 1 or int(craft_select) > len(available_recipes):
-                    print("That's not an option...")
+                    tprint(workshop_flavor[player.zone]["working"])
                     continue
                 
                 selected_recipe_id, selected_recipe = available_recipes[int(craft_select) - 1]
@@ -420,11 +802,82 @@ def workshop(player):
                         tprint(f'Crafting ... (Est. {craft_time} seconds...)', 0.03)
                         time.sleep(craft_time)
                         tprint("Completed!", 0.02)
-                        tprint(f'"There\'s your {selected_recipe["name"]}. Don\'t make me regret this."')
+                        tprint(workshop_flavor[player.zone]["craft_success"])
                     else:
-                        print("You don't have the required materials!")
+                        tprint(workshop_flavor[player.zone]["craft_fail"])
                 else:
-                    print("Crafting canceled.")
+                    tprint(workshop_flavor[player.zone]["craft_cancel"])
+
+                if selection == "2":
+                    available_baits = []
+                    for recipe_id, recipe_data in crafting_recipes.items():
+                        if zones[recipe_data["unloc k_zone"]] and recipe_data["type"] == "bait":
+                            available_baits.append((recipe_id, recipe_data))
+                    
+                    if not available_baits:
+                        tprint(workshop_flavor[player.zone]["no_recipes"])
+                        continue
+                    
+                    for i, (recipe_id, recipe_data) in enumerate(available_baits, 1):
+                        stprint(f"[{i}] --- {recipe_data['name']} (x{recipe_data['quantity']})")
+                    
+                    stprint("[0] --- Back")
+                    
+                    craft_select = input("> ")
+                    if craft_select == "0":
+                        continue
+                    
+                    if not craft_select.isdigit():
+                        tprint(workshop_flavor[player.zone]['invalid'])
+                        continue
+                    if int(craft_select) < 1 or int(craft_select) > len(available_baits):
+                        tprint(workshop_flavor[player.zone]['working'])
+                        continue
+                    
+                    selected_recipe_id, selected_recipe = available_baits[int(craft_select) - 1]
+                    
+                    tprint(f"-- {selected_recipe['name']} --")
+                    time.sleep(0.05)
+                    stprint(f"Description: {selected_recipe['description']}")
+                    stprint(f"Requirements:")
+                    
+                    can_craft = True
+                    for item, quantity in selected_recipe["requirements"].items():
+                        has_quantity = player.inventory["items"].get(item, 0)
+                        status = "✓" if has_quantity >= quantity else "✗"
+                        stprint(f" {status} {display_names['drops'][item]}: {has_quantity}/{quantity}")
+                        if has_quantity < quantity:
+                            can_craft = False
+                    
+                    stprint(f" {('✓' if player.inventory['coins'] >= selected_recipe['cost'] else '✗')} Coins: ${player.inventory['coins']}/${selected_recipe['cost']}")
+                    if player.inventory['coins'] < selected_recipe['cost']:
+                        can_craft = False
+                    
+                    stprint("Craft? (y/n)")
+                    confirm = input("> ")
+                    
+                    if confirm == "y":
+                        if can_craft:
+                            for item, quantity in selected_recipe["requirements"].items():
+                                player.inventory["items"][item] -= quantity
+                                if player.inventory["items"][item] == 0:
+                                    del player.inventory["items"][item]
+                            
+                            player.inventory["coins"] -= selected_recipe["cost"]
+                            
+                            bait_id = selected_recipe_id
+                            player.inventory["baits"][bait_id] = player.inventory["baits"].get(bait_id, 0) + selected_recipe["quantity"]
+                            
+                            craft_time = random.randint(3, 6) 
+                            tprint(f'Crafting bait... (Est. {craft_time} seconds...)', 0.03)
+                            time.sleep(craft_time)
+                            tprint("Completed!", 0.02)
+                            tprint(workshop_flavor[player.zone]['bait_success'])
+                        else:
+                            tprint(workshop_flavor[player.zone]['bait_fail'])
+                    else:
+                        tprint(workshop_flavor[player.zone]['working'])
+                        
 
         if main_select == "2":
             print("=== Quests ===")
@@ -444,8 +897,7 @@ def workshop(player):
                     complete_quests.append(quest_id)
             
             if not unlocked_quests_list:
-                print("No quests available.")
-                print("[0] --- Back")
+                tprint(workshop_flavor[player.zone]["no_quests"])
                 input("> ")
                 continue
             
@@ -464,7 +916,7 @@ def workshop(player):
             selection = input("> ")
             
             if not selection.isdigit():
-                print("That's not an option...")
+                tprint(workshop_flavor[player.zone]["invalid"])
                 continue
             
             selection = int(selection)
@@ -472,7 +924,7 @@ def workshop(player):
                 continue
             
             if selection < 1 or selection > len(unlocked_quests_list):
-                print("That's not an option...")
+                tprint(workshop_flavor[player.zone]["invalid"])
                 continue
             
             selected_quest = unlocked_quests_list[selection - 1]
@@ -504,6 +956,7 @@ def workshop(player):
             if selected_quest in active_quests:
                 stprint(f"{selected_quest_data['name']} || Active")
                 stprint(f"{selected_quest_data['description']}\n")
+                tprint(workshop_flavor[player.zone]["quest_view"])
                 stprint(f"Progress:")
                 total_reqs = 0
                 completed_reqs = 0
@@ -528,7 +981,6 @@ def workshop(player):
                     tprint("You've fulfilled all the requirements! Finish Quest? (y/n) ")
                     confirm = input("> ")
                     if confirm.lower() == "y":
-                        # Deduct resources
                         for requirement, quantity in selected_quest_data['requirements'].items():
                             if requirement in display_names["drops"]:
                                 player.inventory['items'][requirement] = player.inventory['items'].get(requirement, 0) - quantity
@@ -540,7 +992,6 @@ def workshop(player):
                                 if player.inventory['fish'][fish_internal] <= 0:
                                     del player.inventory['fish'][fish_internal]
                         
-                        # Apply rewards
                         for reward, spec in selected_quest_data['rewards'].items():
                             if reward in zones:
                                 zones[reward] = True
@@ -570,6 +1021,7 @@ def workshop(player):
                         player.completed_quests.add(selected_quest)
                     
                         stprint("\n==============================\n")
+                        tprint(workshop_flavor[player.zone]['quest_complete'])
                         input("(press <enter> to continue)")
                     else:
                         continue
@@ -588,7 +1040,8 @@ def inventory(player):
     print("Equipped Gear:")
     rod_code = player.gear["rod"]
     bait_code = player.gear["bait"]
-    stprint(f"Rod: {display_names['rods'][rod_code]} (+{rods[rod_code]} skill)")
+    luck_marker = f"(+{rods[rod_code][1]} luck)" if rods[rod_code][1] > 1 else ""
+    stprint(f"Rod: {display_names['rods'][rod_code]} (+{rods[rod_code][0]} skill) {luck_marker}")
     stprint(f"Bait: {display_names['baits'][bait_code]} (+{baits[bait_code]} skill)\n")
     
     stprint("Fish:")
@@ -612,6 +1065,69 @@ def inventory(player):
             print(f"{equip_mark} {bait_display}: Infinite")
         else:
             print(f"{equip_mark} {bait_display} (x{quantity})")
+
+def logbook(player):
+    while True:
+        stprint("\n ===== Logbook ===== \n")
+        print("=" * 45)
+        found_fish = []
+        shown_fish = []
+        unlocked_zones = []
+        
+        for zone_code, state in zones.items():
+            if state == True:
+                unlocked_zones.append(zone_code)
+
+        for fish_id, fish_class in fish_classes.items():
+            fish_instance = fish_class()
+            for zone_index in fish_instance.zones:
+                zone_codes = list(zones.keys())
+                if zone_index < len(zone_codes) and zones[zone_codes[zone_index]]:
+                    if fish_id not in shown_fish:
+                        shown_fish.append(fish_id)
+
+        for i, fish_internal in enumerate(shown_fish, 1):
+            fish_external = fish_displays[fish_internal]
+            printed = f"✓ {fish_external}" if player.dex.get(fish_internal, 0) > 0 else "? ???"
+            stprint(f"[{i}] {printed}")
+            if printed != "? ???":
+                found_fish.append(fish_internal)
+        stprint("[0] --- Cancel")
+
+        selection = input("> ")
+        if not selection.isdigit():
+            print("That's not an option... "); continue
+            
+        selection = int(selection)
+        if selection > len(shown_fish) or selection < 0: 
+            print("That's not an option... "); continue
+        
+        if selection == 0:
+            print("Exiting Logbook...")
+            return
+        
+        selected_fish = shown_fish[selection - 1]  
+        if selected_fish not in found_fish:
+            print("??? You haven't discovered this fish yet!")
+        else:
+            fish_external = fish_displays[selected_fish]
+            fish_internal = selected_fish
+            instance = fish_classes[selected_fish]()
+            zone_names = []
+            for zone_index in instance.zones:
+                zone_codes = list(zones.keys())
+                if zone_index < len(zone_codes):
+                    zone_names.append(display_names['zones'][zone_codes[zone_index]])
+            
+            stprint(f"-- {fish_external} -- ")
+            tprint(f"{fish_descriptions[fish_internal]}")
+            stprint(f"Caught {player.dex.get(selected_fish, 0)} times.")  
+            stprint(f"Found in {', '.join(zone_names)}.")
+            stprint(f"{instance.day_rarity} during the day; {instance.night_rarity} at night.")
+            stprint("Press <enter> to return...")
+            if input("> ") == "":
+                continue
+            else: print("Exiting Logbook:"); return
 
 
 def switch_bait(player):
@@ -698,10 +1214,31 @@ def unlock_quest(quest):
 def check_quest_unlocked(player):
     if 'night_goby' in player.inventory['fish'] and quests['bridge_to_misty_creek']['status'] == 'hidden':
         unlock_quest("bridge_to_misty_creek")
+
     if 'silverfin' in player.inventory['fish'] and quests['a_guide_by_scale']['status'] == 'hidden':
         unlock_quest("a_guide_by_scale")
+
     if zones["shimmering_brook"] and player.inventory['items'].get("glow_scale", 0) >= 1 and quests["luminous_luck"]["status"] == "hidden":
         unlock_quest("luminous_luck")
+
+    if (player.dex.get("crystal_koi", 0) > 0 and quests["crystal_lake_expedition"]["status"] == "hidden"):
+        unlock_quest("crystal_lake_expedition")
+
+    if zones["misty_creek"] and quests["pond_master"]["status"] == "hidden":
+        unlock_quest("pond_master")
+    
+    if zones["shimmering_brook"] and quests["creek_master"]["status"] == "hidden":
+        unlock_quest("creek_master")
+        
+    if zones["crystal_lake"] and quests["brook_master"]["status"] == "hidden":
+        unlock_quest("brook_master")
+        
+    if zones["crystal_lake"] and quests["lake_master"]["status"] == "hidden":
+        unlock_quest("lake_master")
+
+    if quests["lake_master"]["status"] == "complete" and quests["lake_guardian"]["status"] == "hidden":
+        unlock_quest("lake_guardian")
+    
         
 
 
@@ -711,7 +1248,7 @@ def switch_zone(player):
     unlocked_list = []
     for i, (zone_code, status) in enumerate(zones.items(), 1):
         if status:
-            current_marker = "[CURRENT ZONE]" if i == player.zone else ""
+            current_marker = "[CURRENT ZONE]" if i - 1 == player.zone else ""
             stprint(f"[{i}] --- {current_marker} {display_names['zones'][zone_code]}")
             unlocked_list.append(zone_code)
     print("[0] --- Back\n")
@@ -727,8 +1264,9 @@ def switch_zone(player):
         print("That's not an option...")
         return
     zone_display = display_names['zones'][unlocked_list[selection - 1]]
-    player.zone = selection - 1
+    player.zone = selection - 1  
     tprint(f"You change fishing zones... Moved to {zone_display}")
+    print(player.zone)
     
     
 
@@ -741,36 +1279,45 @@ def stprint(line, delay=0.07):
 def spawn_fish(player_zone, time_of_day):
     """Spawns a fish based on player zone and time of day"""
     possible_fish = []
+    
     current_bait = player.gear["bait"]
     if player.inventory["baits"][current_bait] < 1:
         tprint(f"You're out of {display_names['baits'][current_bait]}! Visit The Tackle Shop to buy more or switch using [baits].")
         return
     player.inventory["baits"][current_bait] -= 1
-
+    
 
     tprint(f"You flick the rod, and the line arcs over the water...", 0.007)
     time.sleep(random.uniform(1, 5))
 
-
-    for fish_name, fish_class in fish_classes.items():
-        fish_instance = fish_class()
-        if player_zone in fish_instance.zones:
-            possible_fish.append(fish_instance)
+    if time_of_day == "night" and current_bait == "lunar_lure": #checks for the lunar lure
+        for fish_name, fish_class in fish_classes.items():
+            fish_instance = fish_class()
+            if player_zone in fish_instance.zones and "glow" or "nocturnal" in fish_instance.traits():
+                possible_fish.append(fish_instance)
+    else:
+        for fish_name, fish_class in fish_classes.items(): #normal spawn
+            fish_instance = fish_class()
+            if player_zone in fish_instance.zones:
+                possible_fish.append(fish_instance)
     
     if not possible_fish:
         return None
     
-    og_roll = random.random()
+    
     current_rod = player.gear['rod']
     effective_luck = player.luck * rods[current_rod][1]
-    roll = og_roll * effective_luck
-    roll = min(1, roll)
+    og_roll = random.random()
+    if random.random() < (effective_luck - 1):
+        roll = max(og_roll, random.random())
+    else: roll = og_roll
+    
     if roll < 0.65: rolled_type = "Common"
     elif roll < 0.8: rolled_type = "Uncommon"
     elif roll < 0.85: rolled_type = "Rare"
     elif roll < 0.865: rolled_type = "Very Rare"
-    elif roll < 0.8664: rolled_type = "Extremely Rare"
-    elif roll < 0.8669: rolled_type = "Legendary"
+    elif roll < 0.8675: rolled_type = "Extremely Rare"
+    elif roll < 0.8683: rolled_type = "Legendary"
     else: rolled_type = None
 
     fish_in_roll = []
@@ -799,7 +1346,6 @@ def reel_fish(player, fish, time_of_day, ticks=25, tick_duration=0.4):
     
     success_texts = [
         f"Success! You've landed a {fish.name}!",
-        "Well done! That's one catch for the books.",
         f"Got it! The {fish.name} is yours.",
         "Victory! The fish is finally in your hands."
         ]
@@ -813,9 +1359,10 @@ def reel_fish(player, fish, time_of_day, ticks=25, tick_duration=0.4):
     
     progress = 0
     bar_length = 20
+    
     effective_skill = player.fishing_skill + rods[player.gear["rod"]][0] + baits[player.gear["bait"]]
     effective_difficulty = max(1, fish.difficulty - effective_skill)
-
+    if time_of_day == "night" and player.gear['bait'] == "lunar_lure": effective_skill += 4
     for i in range(ticks):
         progress_chance = min(0.8, 0.4 + (0.05 * effective_skill) - (0.03 * effective_difficulty))
         rng = random.random()
@@ -825,7 +1372,7 @@ def reel_fish(player, fish, time_of_day, ticks=25, tick_duration=0.4):
             progress = max(0, progress - random.randint(4, 8))
         filled = int(progress / 100 * bar_length)
         if random.random() < 0.1 and "jumpy" in fish.traits:
-            progress = max(0, progress -  (progress * 0.20))
+            progress = int(max(0, progress -  (progress * 0.20)))
             print("The fish thrashes! You lose 20% of progress!")
 
         bar = "█" * filled + "░" * (bar_length - filled)
@@ -857,10 +1404,37 @@ def zone_info(player):
         return
     
     for fish in current_zone_fish:
+        trait_str = ""
+        if "nocturnal" in fish.traits:
+            trait_str += "[Nocturnal] "
+        if "glow" in fish.traits:
+            trait_str += "[Glows] "
+        if "fast" in fish.traits:
+            trait_str += "[Fast] "
+        if "strong" in fish.traits:
+            trait_str += "[Strong] "
+        if "jumpy" in fish.traits:
+            trait_str += "[Jumpy] "
+        if "evasive" in fish.traits:
+            trait_str += "[Evasive] "
+        if "camouflage" in fish.traits:
+            trait_str += "[Camouflage]"
+
         rarity = fish.day_rarity if time_of_day == "day" else fish.night_rarity
         print(f"- {fish.name} | {rarity}")
 
-
+def show_commands():
+    stprint("\n=== COMMANDS ===")
+    stprint("fish / f - Cast your line and try to catch fish")
+    stprint("inventory - Check your gear, fish, and items")
+    stprint("rods - Switch between your fishing rods")
+    stprint("baits - Change your equipped bait")
+    stprint("shop - Visit The Tackle Chest (day only)")
+    stprint("workshop - Visit Craftsman Borin (night only)")
+    stprint("zones - Travel between fishing spots")
+    stprint("logbook - View discovered fish and info")
+    stprint("info - See what fish are in current zone")
+    stprint("commands - Show this list\n")
 
 def tprint(text, delay=0.013):
     for char in text:
@@ -869,37 +1443,53 @@ def tprint(text, delay=0.013):
         time.sleep(delay)
     print()
 
+
+
 player_name = input("Enter your name: ")
 
 player = Player(player_name.title())
 
-tprint(f"Welcome, {player.name}. You stand at the edge of Beginner's Pond, where the sun glimmers off the rippling water and the air smells faintly of moss and adventure.", 0.02)
-time.sleep(0.8)
-tprint("Legends speak of rare fish that lurk in hidden corners, and treasures left behind by those who dared to fish here long ago.", 0.02)
-time.sleep(0.7)
-tprint("You'll start simple, but every catch brings experience, coins, and maybe even secrets waiting to be discovered.\n", 0.02)
-time.sleep(0.5)
-tprint("Here's what you can do to survive and thrive as a fisherman:")
-time.sleep(0.3)
-tprint(" - Type 'f' or 'fish' to cast your line and try your luck.", 0.004)
-time.sleep(0.3)
-tprint(" - Type 'inventory' to check your rods, baits, and catches.", 0.004)
-time.sleep(0.3)
-tprint(" - Type 'rods' to switch which rod you're using.", 0.004)
-time.sleep(0.3)
-tprint(" - Type 'baits' to switch baits or check your supply.", 0.004)
-time.sleep(0.3)
-tprint(" - Type 'shop' to visit The Tackle Chest and buy new baits, or sell your catches.", 0.004)
-time.sleep(0.3)
-tprint(" - Type 'workshop' to craft items or check your quests.", 0.004)
-time.sleep(0.3)
-tprint(" - Type 'zones' to switch between unlocked fishing areas.\n", 0.004)
-time.sleep(0.8)
-tprint("Your journey begins now. Keep an eye on the time of day, and remember: the right bait in the right place can make all the difference. Good luck, fisherman!", 0.023)
+def start_game_exposition(player):
+    tprint("The morning mist hangs over Brookhaven, a quiet village known for its legendary waters.", 0.03)
+    time.sleep(1)
+    tprint("You stand at the edge of Beginner's Pond, rod in hand, the water perfectly still.", 0.03)
+    time.sleep(1)
+    
+    stprint("\nAn old fisherman approaches, his gear weathered but well-kept.")
+    tprint('"New face around here. I\'m Finn."', 0.02)
+    time.sleep(0.8)
+    tprint('"That pond\'s tame, but the waters beyond... now there\'s stories to be told."', 0.02)
+    time.sleep(1)
+    
+    stprint("\nHe gestures upstream where mist curls between the trees.")
+    tprint('"Misty Creek holds fish that gleam like polished stone."', 0.02)
+    tprint('"Further up, the Shimmering Brook runs silver."', 0.02)
+    tprint('"And some whisper of Crystal Lake, where the water itself seems alive."', 0.03)
+    time.sleep(1.2)
+    
+    stprint('\n"But the path isn\'t easy."')
+    tprint('"The bridge to Misty Creek needs repair - see Borin at the workshop after dark."', 0.02)
+    tprint('"The Tackle Chest has better gear, but it\'ll cost you."', 0.02)
+    time.sleep(1)
+    
+    stprint(f'\nFinn studies you for a moment.')
+    tprint(f'"Well, {player.name}? Every great angler starts with a single cast."', 0.03)
+    time.sleep(1)
+    
+    stprint("\n=== QUICK CONTROLS ===")
+    tprint("fish - Cast your line", 0.01)
+    tprint("inventory - Check gear and catches", 0.01)
+    tprint("shop - Buy bait or sell fish (day only)", 0.01)
+    tprint("workshop - Crafting and quests (night only)", 0.01)
+    tprint("zones - Travel to new fishing spots", 0.01)
+    tprint("logbook - Track your discoveries", 0.01)
+    tprint("commands - Displays all command keys")
+    time.sleep(1)
+    
+    tprint("\nThe water ripples gently. Your journey begins...", 0.03)
+    time.sleep(1)
 
 while True:
-    turn+=1
-    
 
     player.inventory["baits"]["worm"] += 1
 
@@ -917,7 +1507,7 @@ while True:
             continue
     if time_of_day == "day": print(f"--- {(5 + turn - 1) % 24}:00 || Day")
     else: 
-        if turn > 13: print(f"--- {(5 + turn - 1) % 24}:00 || Night")
+        if turn < 6: print(f"--- {(5 + turn - 1) % 24}:00 || Night")
         else: print(f" --- {5 + turn - 12}:00 || Night/Early Morning")
 
     command = input("> ")
@@ -925,27 +1515,41 @@ while True:
         fished = spawn_fish(player.zone, time_of_day)
         if fished == None: 
             print("Nothing but seaweed. Eugh.")
-
+            turn+=1
             continue
         else: 
             rarity = fished.day_rarity if time_of_day == "day" else fished.night_rarity
             tprint(f"Tug - something's on the line! It's a {fished.name} ({rarity}) || Press <enter> to reel... ", 0.008)
-            if input("> ") == "":
-                reeled = reel_fish(player, fished, time_of_day)
-                if reeled:
-                    if hasattr(fished, "drops"):
-                        for item, rarity in fished.drops.items():
-                            if random.random() <= rarity:
-                                print(f"The {fished.name} dropped 1 {display_names['drops'][item]}!")
-                                player.inventory["items"][item] = player.inventory["items"].get(item, 0) + 1
-                                
-                            continue
-                    continue
+            if rarity in ["Extremely Rare", "Legendary"]:
+                stprint("\n!!! " * 8)
+                tprint(f"==== YOU'VE HOOKED A {rarity} FISH! ====")
+                stprint("!!! " * 8)
+            input("> ")
+            reeled = reel_fish(player, fished, time_of_day)
+            if reeled:
+                if hasattr(fished, "drops"):
+                    for item, rarity in fished.drops.items():
+                        if random.random() <= rarity:
+                            print(f"The {fished.name} dropped 1 {display_names['drops'][item]}!")
+                            player.inventory["items"][item] = player.inventory["items"].get(item, 0) + 1
+                        turn+=1
+                        continue
+                internal_fished = fish_name_map[fished.name]
+                player.dex[internal_fished] = player.dex.get(internal_fished, 0) + 1
+                if player.dex[internal_fished] < 2:
+                    print(f"Your first {fished.name} catch! Added to [logbook].")
+            turn+=1
+            continue
+
+
+                    
     if command == "shop":
         shop(player)
+        turn +=1
         continue
     if command == "workshop":
         workshop(player)
+        turn +=1
         continue
     if command == "inventory":
         inventory(player)
@@ -960,7 +1564,12 @@ while True:
         continue
     if command == "zones":
         switch_zone(player)
+        turn+=1
         continue
     if command == "info":
         zone_info(player)
         continue
+    if command == "logbook":
+        logbook(player)
+    if command == "commands":
+        show_commands()
