@@ -80,7 +80,7 @@ class Shimmerfin(Fish):
             night_rarity = "Very Rare",
             zones = [0]
         )
-        self.drops = {"magical_resin": 0.4}
+        self.drops = {"magical_resin": 0.6}
 
 class Trout(Fish):
     def __init__(self):
@@ -103,7 +103,7 @@ class Bass(Fish):
             night_rarity = "Uncommon",
             zones = [1]
         )
-        self.drops = {"iron_shard": 0.15}
+        self.drops = {"iron_shard": 0.2}
 
 class Glowfish(Fish):
     def __init__(self):
@@ -115,7 +115,7 @@ class Glowfish(Fish):
             night_rarity = "Rare",
             zones = [1]
         )
-        self.drops = {"glow_scale": 0.2}
+        self.drops = {"glow_scale": 0.3}
 
 class Frogfish(Fish):
     def __init__(self):
@@ -207,4 +207,76 @@ class AzureGill(Fish):
             zones=[2]
         )
         self.drops = {"azure_fin": 0.3}
+
+class MoonlightGuppy(Fish):
+    def __init__(self):
+        super().__init__(
+            name = "Moonlight Guppy",
+            difficulty =6,
+            traits=["glow", "fast"],
+            day_rarity="Common",
+            night_rarity="Very Rare",
+            zones=[3]
+        )
+        self.drops = {"glow_scale": 0.4}
+
+class DeepwaterSturgeon(Fish):
+    def __init__(self):
+        super().__init__(
+            name = "Deepwater Sturgeon",
+            difficulty=8,
+            traits=["strong", "camouflage"],
+            day_rarity="Uncommon",
+            night_rarity="Rare",
+            zones=[3]
+        )
+        self.drops = {"iron_shard": 0.3, "river_pearl": 0.1}
+
+class PrismTrout(Fish):
+    def __init__(self):
+        super().__init__(
+            name = "Prism Trout",
+            difficulty = 9,
+            traits=["glow", "evasive"],
+            day_rarity="Rare",
+            night_rarity="Rare",
+            zones=[3]
+        )
+        self.drops = {"crystal_shard": 0.3, "magical_resin": 0.2}
+
+class AbyssalAngler(Fish):
+    def __init__(self):
+        super().__init__(
+            name = "Abyssal Angler",
+            difficulty=9,
+            traits=["strong", "glow"],
+            day_rarity="Very Rare",
+            night_rarity="Common",
+            zones=[3]
+        )
+        self.drops = {"glow_scale": 0.5}
+
+class LunarTrout(Fish):
+    def __init__(self):
+        super().__init__(
+            name = "Lunar Trout",
+            difficulty=7,
+            traits=["nocturnal", "jumpy"],
+            day_rarity="Rare",
+            night_rarity="Uncommon",
+            zones=[3]
+        )
+        self.drops={"moonstone": 0.4}
+
+class GhostCarp(Fish):
+    def __init__(self):
+        super().__init__(
+            name = "Ghost Carp", 
+            difficulty=11,
+            traits=["camouflage"],
+            day_rarity="Extremely Rare",
+            night_rarity='Legendary',
+            zones=[3]
+        )
+        self.drops = {"spectral_fin", 0.8}
 
