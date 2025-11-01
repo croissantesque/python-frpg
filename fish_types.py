@@ -32,7 +32,7 @@ class SmallCarp(Fish):
             night_rarity = "Common",
             zones = [0, 1]
         )
-        self.drops = {"wood_plank": 0.2}
+        self.drops = {"wood_plank": 0.3}
         
 
 class Minnow(Fish):
@@ -103,7 +103,7 @@ class Bass(Fish):
             night_rarity = "Uncommon",
             zones = [1]
         )
-        self.drops = {"iron_shard": 0.2}
+        self.drops = {"iron_shard": 0.25}
 
 class Glowfish(Fish):
     def __init__(self):
@@ -115,7 +115,7 @@ class Glowfish(Fish):
             night_rarity = "Rare",
             zones = [1]
         )
-        self.drops = {"glow_scale": 0.3}
+        self.drops = {"glow_scale": 0.6}
 
 class Frogfish(Fish):
     def __init__(self):
@@ -147,7 +147,7 @@ class CrystalKoi(Fish):
             traits = ["glow"],
             day_rarity = "Very Rare",
             night_rarity = "Very Rare",
-            zones = [1]
+            zones = [2]
         )
 
 class RapidfinTrout(Fish):
