@@ -11,6 +11,7 @@ turn = 1
 PERIOD_LENGTH = 12
 
 
+
 quests= {
     "bridge_to_misty_creek": {
         "name": "The Bridge to Misty Creek",
@@ -372,7 +373,7 @@ class Player:
         self.fishing_skill = 1
         self.luck = 1
         self.gear = {"rod": "wooden_rod", "bait": "worm"}
-        self.inventory = {"fish": {}, "coins": 0, "items": {}, "rods": {}, "baits": {"worm": 10}}
+        self.inventory = {"fish": {}, "coins": 105, "items": {}, "rods": {}, "baits": {"worm": 10}}
         self.zone = 0
         self.dex = {}
 
@@ -882,35 +883,25 @@ def workshop(player):
         if main_select == "2":
             print("=== Quests ===")
             print("\n --- Active ---")
-            unlocked_quests_list = []
             active_quests = []
             complete_quests = []
-            
-           
-            for i, (quest_id, quest_data) in enumerate(quests.items(), 1):
+            unlocked_quests_list = []
+
+            for quest_id, quest_data in quests.items():
                 if quest_data["status"] == "active": 
-                    stprint(f"[{i}] --- {quest_data['name']}")
-                    unlocked_quests_list.append(quest_id)
                     active_quests.append(quest_id)
                 elif quest_data["status"] == "complete":
-                    unlocked_quests_list.append(quest_id)
                     complete_quests.append(quest_id)
-            
-            if not unlocked_quests_list:
-                tprint(workshop_flavor[player.zone]["no_quests"])
-                input("> ")
-                continue
-            
+
+            unlocked_quests_list = active_quests + complete_quests
+
+            print("\n --- Active ---")
+            for i, quest_id in enumerate(active_quests, 1):
+                stprint(f"[{i}] --- {quests[quest_id]['name']}")
+
             print("\n--- Completed ---")
-            completed_display_list = []
-            for quest_id, quest_data in quests.items():
-                if quest_data["status"] == "complete":
-                    completed_display_list.append(quest_id)
-            
-            for i, quest_id in enumerate(completed_display_list, len(active_quests) + 1):
-                quest_data = quests[quest_id]
-                stprint(f"[{i}] --- {quest_data['name']}")
-            
+            for i, quest_id in enumerate(complete_quests, len(active_quests) + 1):
+                stprint(f"[{i}] --- {quests[quest_id]['name']}")
             print("[0] --- Back")
 
             selection = input("> ")
@@ -968,11 +959,9 @@ def workshop(player):
                         stprint(f" - {display_names['drops'][requirement]} | {current}/{needed}")
                         if current >= needed: 
                             completed_reqs += 1
-                    elif requirement in fish_name_map:
-                        code_name = fish_name_map[requirement]
-                        current = player.inventory['fish'].get(code_name, 0)
-                        fish_display = [k for k,v in fish_name_map.items() if v == code_name][0]
-                        stprint(f" - {fish_display} | {current}/{needed}")
+                    elif requirement in fish_displays:
+                        current = player.inventory['fish'].get(requirement, 0)
+                        stprint(f" - {fish_displays[requirement]} | {current}/{needed}")
                         if current >= needed: 
                             completed_reqs += 1
                 
@@ -1018,7 +1007,6 @@ def workshop(player):
                                 stprint(f" - {display_names['zones'][reward]} unlocked!")
                         
                         selected_quest_data['status'] = "complete"
-                        player.completed_quests.add(selected_quest)
                     
                         stprint("\n==============================\n")
                         tprint(workshop_flavor[player.zone]['quest_complete'])
@@ -1489,6 +1477,8 @@ def start_game_exposition(player):
     tprint("\nThe water ripples gently. Your journey begins...", 0.03)
     time.sleep(1)
 
+
+start_game_exposition(player)
 while True:
 
     player.inventory["baits"]["worm"] += 1
@@ -1505,10 +1495,14 @@ while True:
             print(" --- The sun rises on the horizon. It's day.")
             time_of_day = "day"
             continue
-    if time_of_day == "day": print(f"--- {(5 + turn - 1) % 24}:00 || Day")
+    if time_of_day == "day":
+        current_hour = 4 + turn - 1  
+        print(f"--- {current_hour}:00 || Day")
     else: 
-        if turn < 6: print(f"--- {(5 + turn - 1) % 24}:00 || Night")
-        else: print(f" --- {5 + turn - 12}:00 || Night/Early Morning")
+        current_hour = 17 + turn - 1  
+        if current_hour >= 24:
+            current_hour -= 24
+        print(f"--- {current_hour}:00 || Night")
 
     command = input("> ")
     if command in ["f", "fish"]:
