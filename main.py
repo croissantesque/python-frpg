@@ -26,7 +26,7 @@ quests= {
         "name": "Pond Master",
         "rewards": {"skill": 1, "money": 150, "luck": 1.03},
         "requirements": {"small_carp": 1, "minnow": 1, "pond_perch": 1, "night_goby": 1, "shimmerfin": 1},
-        "status": "hidden",
+        "status": "active",
         "description": "Catch and deliver one of each of Beginner Pond's fish. Prove your foundational fishing skills!",
         "complete_description": "You've mastered the Beginner's Pond! Your basic technique is now flawless, making all future fishing easier."
     },
@@ -1112,6 +1112,11 @@ def logbook(player):
             stprint(f"Caught {player.dex.get(selected_fish, 0)} times.")  
             stprint(f"Found in {', '.join(zone_names)}.")
             stprint(f"{instance.day_rarity} during the day; {instance.night_rarity} at night.")
+            if instance.drops: 
+                drops = [f"{drop} ({chance}%)" for drop, chance in instance.drops.items()]
+                for drop, chance in instance.drops.items():
+                    drops.append((drop, f"{chance}%"))
+                stprint(f"Drops {", ".join(drops)}")
             stprint("Press <enter> to return...")
             if input("> ") == "":
                 continue
@@ -1211,14 +1216,11 @@ def check_quest_unlocked(player):
 
     if (player.dex.get("crystal_koi", 0) > 0 and quests["crystal_lake_expedition"]["status"] == "hidden"):
         unlock_quest("crystal_lake_expedition")
-
-    if zones["misty_creek"] and quests["pond_master"]["status"] == "hidden":
-        unlock_quest("pond_master")
     
-    if zones["shimmering_brook"] and quests["creek_master"]["status"] == "hidden":
+    if zones["misty_creek"] and quests["creek_master"]["status"] == "hidden":
         unlock_quest("creek_master")
         
-    if zones["crystal_lake"] and quests["brook_master"]["status"] == "hidden":
+    if zones["shimmering_brook"] and quests["brook_master"]["status"] == "hidden":
         unlock_quest("brook_master")
         
     if zones["crystal_lake"] and quests["lake_master"]["status"] == "hidden":
