@@ -26,15 +26,25 @@ quests= {
         "name": "Pond Master",
         "rewards": {"skill": 1, "money": 150, "luck": 1.03},
         "requirements": {"small_carp": 1, "minnow": 1, "pond_perch": 1, "night_goby": 1, "shimmerfin": 1},
-        "status": "active",
+        "status": "hidden",
         "description": "Catch and deliver one of each of Beginner Pond's fish. Prove your foundational fishing skills!",
         "complete_description": "You've mastered the Beginner's Pond! Your basic technique is now flawless, making all future fishing easier."
+    },
+
+    "the_shack": {
+        "name": "The Old Wooden Shack",
+        "rewards": {"luck": 1.04, "shack": 1,},
+        "requirements": {"iron_shard": 3, "wood_plank": 3, "glow_scale": 2},
+        "status": "hidden",
+        "description": "Overlooking Beginner's Pond sits a weathered old shack, abandoned but sturdy. With a few repairs and a touch of light from Glow Scales, it could become your personal home to rest between casts.",
+        "complete_description": "You've patched up the Old Wooden Shack! It now stands cozy and warm by the pond's edge. For the first time, the waters feel a little like home. (Unlocks [home] command.)"
+        
     },
 
     "creek_master": {
         "name": "Misty Creek Master",
         "rewards": {"skill": 1, "money": 250, "luck": 1.04},
-        "requirements": {"small_carp": 1, "minnow": 1, "trout": 1, "bass": 1, "glowfish": 1, "frogfish": 1, "silverfin": 1, "crystal_koi": 1},
+        "requirements": {"small_carp": 1, "minnow": 1, "trout": 1, "bass": 1, "glowfish": 1, "frogfish": 1, "silverfin": 1},
         "status": "hidden",
         "description": "Conquer Misty Creek's diverse fish. Each fish teaches a different angling technique.", 
         "complete_description": "You've mastered the marine life of Misty Creek! Your versatility as a fisherman is notable."
@@ -53,7 +63,7 @@ quests= {
     "brook_master": {
         "name": "Shimmering Brook Master",
         "rewards": {"skill": 1, "money": 350, "luck": 1.03},
-        "requirements": {"minnow": 1, "rapidfin_trout": 1, "carp": 1, "perch": 1, "shadowfin": 1, "azure_gill": 1},
+        "requirements": {"minnow": 1, "rapidfin_trout": 1, "carp": 1, "perch": 1, "shadowfin": 1, "azure_gill": 1, "crystal_koi": 1},
         "status": "hidden", 
         "description": "The Shimmering Brook ecosystem requires specialized knowledge. Catch 'em all!",
         "complete_description": "You've unraveled the mysteries of Shimmering Brook! Your precision has sharpened."
@@ -180,6 +190,21 @@ fish_descriptions = {
     "ghost_carp": "So pale it's nearly transparent. Legends say it's the spirit of the lake itself, rarely seen by mortal eyes. [Camouflage]"
 }
 
+weather_types = ["Clear", "Rainy", "Stormy", "Foggy"]
+current_weather = "Clear"
+weather_timer = 48
+weather_announces = {
+    "Clear": "The sky's clear, and the waters sparkle.",
+    "Foggy": "The gentle mist thickens into an oppressive fog...",
+    "Rainy": "A downpour begins - nocturnal fish are easier to fish!",
+    "Stormy": "Dark clouds roll in - a heavy storm's arrived..."
+}
+weather_descs = {
+    "Clear": "(Luck boosted!)",
+    "Rainy": "(Nocturnal fish more active!)",
+    "Foggy": "(Fish are more slippery...)",
+    "Stormy": "(Conditions are bad, luck decreased!)"
+}
 
 display_names = {
     "zones": {
@@ -216,12 +241,6 @@ display_names = {
         "glowworms": "glow worms",
         "golden_grubs": "golden grubs"
     },
-    "zones": {
-        "beginners_pond": "Beginner's Pond",
-        "misty_creek": "Misty Creek",
-        "shimmering_brook": "Shimmering Brook"
-        
-    }
 }
 
 
@@ -367,6 +386,28 @@ fish_displays = {
     "ghost_carp": "Ghost Carp"
 }
 
+
+
+sleep_prints = {
+    "Clear": {
+        "night": "You drift off under a blanket of stars visible through the window. Crickets chirp softly outside as dreams of calm waters take hold...",
+        "day": "A short nap in the quiet shack refreshes you. Sunlight warms the floorboards."
+    },
+
+    "Rainy": {
+        "night": "Rain patters rhythmically on the roof like a soothing lullaby. A frog croaks lazily outside, harmonizing with the downpour as you sink into deep, restorative sleep...",
+        "day": "The steady rain on the roof creates a cocoon of sound. You rest, listening to droplets dance overhead."
+    },
+    "Foggy": {
+        "night": "Thick fog muffles the world outside. The shack feels like a hidden sanctuary as you slip into a dreamy, hushed slumber.",
+        "day": "Mist presses against the windows, turning the shack into a soft gray haven. Your brief rest feels timeless."
+    },
+    "Stormy": {
+        "night": "Thunder rumbles distantly as wind howls around the eaves. Strangely, the storm's fury makes the shack feel safer; you sleep heavily, exhausted but secure.",
+        "day": "Lightning flickers through the clouds. You nap fitfully, awakened occasionally by thunder, but still refreshed."
+    }
+}
+
 class Player:
     def __init__(self, name):
         self.name = name
@@ -376,6 +417,7 @@ class Player:
         self.inventory = {"fish": {}, "coins": 105, "items": {}, "rods": {}, "baits": {"worm": 10}}
         self.zone = 0
         self.dex = {}
+        self.shack = {"unlocked": True, "decor": []}
 
 def shop(player):
     while True:
@@ -730,7 +772,7 @@ def workshop(player):
 
         if main_select == "1":
             if not zones["misty_creek"]:
-                stprint("You don't got nuthin' here.")
+                tprint("You don't got nuthin' here.")
                 continue
 
             print("=== Crafting ===")
@@ -996,6 +1038,8 @@ def workshop(player):
                                 player.luck = player.luck * spec
                             elif reward == "money":
                                 player.inventory["coins"] += spec
+                            elif reward == "shack":
+                                player.shack["unlocked"] = True
                         
                         print("\n==============================")
                         stprint(f" QUEST COMPLETE: {selected_quest_data['name'].upper()} ")
@@ -1011,11 +1055,14 @@ def workshop(player):
                                 stprint(f" - +{spec} coins!")
                             elif reward in zones:
                                 stprint(f" - {display_names['zones'][reward]} unlocked!")
+                            elif reward == "shack":
+                                stprint(f" - Unlocked your personal home and the [home] command")
                         
                         selected_quest_data['status'] = "complete"
                     
                         stprint("\n==============================\n")
-                        tprint(workshop_flavor[player.zone]['quest_complete'])
+                        tprint(workshop_flavor[player.zone]['quest_complete'], 0.008)
+                        
                         input("(press <enter> to continue)")
                     else:
                         continue
@@ -1060,6 +1107,48 @@ def inventory(player):
         else:
             print(f"{equip_mark} {bait_display} (x{quantity})")
 
+
+
+def shack(player):
+    if player.shack['unlocked'] == False:
+        return
+
+    tprint("You enter your little cabin; a wooden sign hangs above the doorway, your name hand-carved onto it.")
+    shack_int(player)
+    return
+
+
+def shack_int(player):
+    while True:
+        command = input("Home>")
+        if command in ["exit", "leave", "return"]:
+            tprint("You exit the cabin.")
+            break
+        elif command in ["sleep", "rest"]:
+            sleep_shack(player)
+    return
+
+def sleep_shack(player):
+    global turn, time_of_day
+
+    tprint(sleep_prints[current_weather][time_of_day])
+    if time_of_day == "day": 
+        turn += 3
+        time.sleep(1)
+        manage_time()
+
+        return
+    else:
+        turn = 1
+        time_of_day = "day"
+        time.sleep(1.5)
+        print(" --- The sun rises on the horizon. It's day.")
+
+        manage_time()
+
+
+
+
 def logbook(player):
     while True:
         stprint("\n ===== Logbook ===== \n")
@@ -1067,6 +1156,8 @@ def logbook(player):
         found_fish = []
         shown_fish = []
         unlocked_zones = []
+        unq_counter = 0
+        unq_found_counter = 0
         
         for zone_code, state in zones.items():
             if state == True:
@@ -1079,7 +1170,12 @@ def logbook(player):
                 if zone_index < len(zone_codes) and zones[zone_codes[zone_index]]:
                     if fish_id not in shown_fish:
                         shown_fish.append(fish_id)
+                        unq_counter += 1
+                        
+                        if player.dex.get(fish_id, 0) > 0: unq_found_counter +=1
+        
 
+        stprint(f"Discovered in visible waters: {unq_found_counter} out of {unq_counter} unique species ({int(unq_found_counter/unq_counter * 100)}%)")
         for i, fish_internal in enumerate(shown_fish, 1):
             fish_external = fish_displays[fish_internal]
             printed = f"{fish_external}" if player.dex.get(fish_internal, 0) > 0 else "? ???"
@@ -1222,10 +1318,12 @@ def check_quest_unlocked(player):
     if (player.dex.get("crystal_koi", 0) > 0 and quests["crystal_lake_expedition"]["status"] == "hidden"):
         unlock_quest("crystal_lake_expedition")
     
-    if zones["misty_creek"] and quests["creek_master"]["status"] == "hidden":
+    if zones["misty_creek"] and quests["pond_master"]["status"] == "hidden":
+        unlock_quest("pond_master")
+    if zones["shimmering_brook"] and quests["creek_master"]["status"] == "hidden":
         unlock_quest("creek_master")
         
-    if zones["shimmering_brook"] and quests["brook_master"]["status"] == "hidden":
+    if zones["crystal_lake"] and quests["brook_master"]["status"] == "hidden":
         unlock_quest("brook_master")
         
     if zones["crystal_lake"] and quests["lake_master"]["status"] == "hidden":
@@ -1234,7 +1332,10 @@ def check_quest_unlocked(player):
     if quests["lake_master"]["status"] == "complete" and quests["lake_guardian"]["status"] == "hidden":
         unlock_quest("lake_guardian")
     
-        
+    if quests["pond_master"]["status"] == 'complete' and quests["the_shack"]["status"] == "hidden": 
+        unlock_quest("the_shack")
+    
+    
 
 
 
@@ -1264,7 +1365,7 @@ def switch_zone(player):
     print(player.zone)
     
     
-
+#print then wait
 def stprint(line, delay=0.07):
     print(line)
     time.sleep(delay)
@@ -1288,7 +1389,7 @@ def spawn_fish(player_zone, time_of_day):
     if time_of_day == "night" and current_bait == "lunar_lure": #checks for the lunar lure
         for fish_name, fish_class in fish_classes.items():
             fish_instance = fish_class()
-            if player_zone in fish_instance.zones and "glow" or "nocturnal" in fish_instance.traits():
+            if player_zone in fish_instance.zones and ("glow" in fish_instance.traits() or "nocturnal" in fish_instance.traits()):
                 possible_fish.append(fish_instance)
     else:
         for fish_name, fish_class in fish_classes.items(): #normal spawn
@@ -1302,6 +1403,8 @@ def spawn_fish(player_zone, time_of_day):
     
     current_rod = player.gear['rod']
     effective_luck = player.luck * rods[current_rod][1]
+    if current_weather == "Clear": effective_luck *= 1.15
+    if current_weather == "Stormy": effective_luck *= 0.8
     og_roll = random.random()
     if random.random() < (effective_luck - 1):
         roll = max(og_roll, random.random())
@@ -1354,12 +1457,20 @@ def reel_fish(player, fish, time_of_day, ticks=25, tick_duration=0.4):
     
     progress = 0
     bar_length = 20
-    
+    #base calc
     effective_skill = player.fishing_skill + rods[player.gear["rod"]][0] + baits[player.gear["bait"]]
     effective_difficulty = max(1, fish.difficulty - effective_skill)
+    #weather calc
+    if current_weather == "Foggy": effective_difficulty *= 1.15
+    elif current_weather == "Stormy": effective_difficulty *= 1.2
+    elif "Rainy" and "nocturnal" in fish.traits: effective_skill *= 1.25
+
+    #lunar bait calc
     if time_of_day == "night" and player.gear['bait'] == "lunar_lure": effective_skill += 4
+
+
     for i in range(ticks):
-        progress_chance = min(0.8, 0.4 + (0.05 * effective_skill) - (0.03 * effective_difficulty))
+        progress_chance = min(0.85, 0.4 + (0.05 * effective_skill) - (0.03 * effective_difficulty))
         rng = random.random()
         if rng < progress_chance:
             progress = min(100, progress + random.randint(15,25))
@@ -1431,6 +1542,7 @@ def show_commands():
     stprint("info - See what fish are in current zone")
     stprint("commands - Show this list\n")
 
+#print slowly - typewriter print
 def tprint(text, delay=0.013):
     for char in text:
         sys.stdout.write(char)
@@ -1447,30 +1559,7 @@ player = Player(player_name.title())
 def start_game_exposition(player):
     tprint("The morning mist hangs over Brookhaven, a quiet village known for its legendary waters.", 0.03)
     time.sleep(1)
-    tprint("You stand at the edge of Beginner's Pond, rod in hand, the water perfectly still.", 0.03)
-    time.sleep(1)
-    
-    stprint("\nAn old fisherman approaches, his gear weathered but well-kept.")
-    tprint('"New face around here. I\'m Finn."', 0.02)
-    time.sleep(0.8)
-    tprint('"That pond\'s tame, but the waters beyond... now there\'s stories to be told."', 0.02)
-    time.sleep(1)
-    
-    stprint("\nHe gestures upstream where mist curls between the trees.")
-    tprint('"Misty Creek holds fish that gleam like polished stone."', 0.02)
-    tprint('"Further up, the Shimmering Brook runs silver."', 0.02)
-    tprint('"And some whisper of Crystal Lake, where the water itself seems alive."', 0.03)
-    time.sleep(1.2)
-    
-    stprint('\n"But the path isn\'t easy."')
-    tprint('"The bridge to Misty Creek needs repair - see Borin at the workshop after dark."', 0.02)
-    tprint('"The Tackle Chest has better gear, but it\'ll cost you."', 0.02)
-    time.sleep(1)
-    
-    stprint(f'\nFinn studies you for a moment.')
-    tprint(f'"Well, {player.name}? Every great angler starts with a single cast."', 0.03)
-    time.sleep(1)
-    
+
     stprint("\n=== QUICK CONTROLS ===")
     tprint("fish - Cast your line", 0.01)
     tprint("inventory - Check gear and catches", 0.01)
@@ -1484,6 +1573,24 @@ def start_game_exposition(player):
     tprint("\nThe water ripples gently. Your journey begins...", 0.03)
     time.sleep(1)
 
+def manage_time():
+    global turn, time_of_day, current_hour
+    if turn >= PERIOD_LENGTH:
+        turn = 1
+        if time_of_day == "day":
+            print(" --- The sun sets. Night falls.")
+            time_of_day = "night"
+        elif time_of_day == "night":
+            print(" --- The sun rises on the horizon. It's day.")
+            time_of_day = "day"
+    if time_of_day == "day":
+        current_hour = 5 + turn 
+        print(f"--- {current_hour}:00 | Day | {current_weather} {weather_descs[current_weather]}")
+    else: 
+        current_hour = 17 + turn - 1  
+        if current_hour >= 24:
+            current_hour -= 24
+        print(f"--- {current_hour}:00 | Night | {current_weather} {weather_descs[current_weather]}")
 
 start_game_exposition(player)
 while True:
@@ -1491,26 +1598,12 @@ while True:
     player.inventory["baits"]["worm"] += 1
 
     check_quest_unlocked(player)
-
-    if turn >= PERIOD_LENGTH:
-        turn = 1
-        if time_of_day == "day":
-            print(" --- The sun sets. Night falls.")
-            time_of_day = "night"
-            continue
-        if time_of_day == "night":
-            print(" --- The sun rises on the horizon. It's day.")
-            time_of_day = "day"
-            continue
-    if time_of_day == "day":
-        current_hour = 5 + turn 
-        print(f"--- {current_hour}:00 || Day")
-    else: 
-        current_hour = 17 + turn - 1  
-        if current_hour >= 24:
-            current_hour -= 24
-        print(f"--- {current_hour}:00 || Night")
-
+    weather_timer -= 1
+    if weather_timer <=0:
+        current_weather = random.choice(weather_types)
+        weather_timer = 48
+        stprint(weather_announces[current_weather])
+    manage_time()
     command = input("> ")
     if command in ["f", "fish"]:
         fished = spawn_fish(player.zone, time_of_day)
@@ -1523,7 +1616,7 @@ while True:
             tprint(f"Tug - something's on the line! It's a {fished.name} ({rarity}) || Press <enter> to reel... ", 0.008)
             if rarity in ["Extremely Rare", "Legendary"]:
                 stprint("\n!!! " * 8)
-                tprint(f"==== YOU'VE HOOKED A {rarity} FISH! ====")
+                tprint(f"==== YOU'VE HOOKED A {rarity.upper()} FISH! ====")
                 stprint("!!! " * 8)
             input("> ")
             reeled = reel_fish(player, fished, time_of_day)
@@ -1548,29 +1641,34 @@ while True:
         shop(player)
         turn +=1
         continue
-    if command == "workshop":
+    elif command == "workshop":
         workshop(player)
         turn +=1
         continue
-    if command == "inventory":
+    elif command == "inventory":
         inventory(player)
         continue
 
-    if command == "baits":
+    elif command == "baits":
         switch_bait(player)
         continue
 
-    if command == "rods":
+    elif command == "rods":
         switch_rods(player)
         continue
-    if command == "zones":
+    elif command == "zones":
         switch_zone(player)
         turn+=1
         continue
-    if command == "info":
+    elif command == "info":
         zone_info(player)
         continue
-    if command == "logbook":
+    elif command == "logbook":
         logbook(player)
-    if command == "commands":
+    elif command in ["commands", "help"]:
         show_commands()
+    elif command in ["home", "cabin", "shack"]:
+        shack(player)
+    
+
+    else: print("That's not a valid command."); continue
