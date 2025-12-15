@@ -1113,7 +1113,7 @@ def logbook(player):
             stprint(f"Caught {player.dex.get(selected_fish, 0)} times.")  
             stprint(f"Found in {', '.join(zone_names)}.")
             stprint(f"{instance.day_rarity} during the day; {instance.night_rarity} at night.")
-            if hasattr(instance, drops): 
+            if hasattr(instance, "drops"): 
                 drops = [f"{drop} ({chance}%)" for drop, chance in instance.drops.items()]
                 for drop, chance in instance.drops.items():
                     drops.append((drop, f"{chance}%"))
@@ -1499,7 +1499,7 @@ while True:
             time_of_day = "day"
             continue
     if time_of_day == "day":
-        current_hour = 4 + turn - 1  
+        current_hour = 5 + turn 
         print(f"--- {current_hour}:00 || Day")
     else: 
         current_hour = 17 + turn - 1  
