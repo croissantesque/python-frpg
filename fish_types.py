@@ -39,7 +39,7 @@ class Minnow(Fish):
     def __init__(self):
         super().__init__(
             name = "Minnow",
-            difficulty = 1,
+            difficulty = 0.5,
             traits = ["fast"],
             day_rarity = "Common",
             night_rarity = "Common",
@@ -50,7 +50,7 @@ class PondPerch(Fish):
     def __init__(self):
         super().__init__(
             name = "Pond Perch",
-            difficulty = 2,
+            difficulty = 1.3,
             traits = ["jumpy"],
             day_rarity = "Rare",
             night_rarity = "Rare",
@@ -62,7 +62,7 @@ class NightGoby(Fish):
     def __init__(self):
         super().__init__(
             name = "Night Goby",
-            difficulty = 2,
+            difficulty = 1.4,
             traits = ["nocturnal"],
             day_rarity = "Rare",
             night_rarity = "Uncommon",
@@ -74,13 +74,13 @@ class Shimmerfin(Fish):
     def __init__(self):
         super().__init__(
             name = "Shimmerfin",
-            difficulty = 3,
+            difficulty = 2.5,
             traits = ["glow"],
             day_rarity = "Very Rare",
             night_rarity = "Very Rare",
             zones = [0]
         )
-        self.drops = {"magical_resin": 0.6}
+        self.drops = {"magical_resin": 0.75}
 
 class Trout(Fish):
     def __init__(self):
@@ -103,7 +103,7 @@ class Bass(Fish):
             night_rarity = "Uncommon",
             zones = [1]
         )
-        self.drops = {"iron_shard": 0.25}
+        self.drops = {"iron_shard": 0.3}
 
 class Glowfish(Fish):
     def __init__(self):
