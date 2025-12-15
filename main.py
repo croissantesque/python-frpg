@@ -458,7 +458,8 @@ def shop(player):
             tprint(shop_flavor[player.zone]['closed'], 0.02)
             return
         
-        
+        tprint(shop_flavor[player.zone]['welcome'], 0.05)
+
         print(f"Money: ${player.inventory['coins']}")
         print(f"=== The {shop_names[player.zone]} ===")
         print("=" * 40)
@@ -1076,7 +1077,7 @@ def logbook(player):
 
         for i, fish_internal in enumerate(shown_fish, 1):
             fish_external = fish_displays[fish_internal]
-            printed = f"✓ {fish_external}" if player.dex.get(fish_internal, 0) > 0 else "? ???"
+            printed = f"{fish_external}" if player.dex.get(fish_internal, 0) > 0 else "? ???"
             stprint(f"[{i}] {printed}")
             if printed != "? ???":
                 found_fish.append(fish_internal)
@@ -1112,11 +1113,11 @@ def logbook(player):
             stprint(f"Caught {player.dex.get(selected_fish, 0)} times.")  
             stprint(f"Found in {', '.join(zone_names)}.")
             stprint(f"{instance.day_rarity} during the day; {instance.night_rarity} at night.")
-            if instance.drops: 
+            if getattr(instance.drops, ""): 
                 drops = [f"{drop} ({chance}%)" for drop, chance in instance.drops.items()]
                 for drop, chance in instance.drops.items():
                     drops.append((drop, f"{chance}%"))
-                stprint(f"Drops {", ".join(drops)}")
+                stprint(f"Drops {', '.join(drops)}")
             stprint("Press <enter> to return...")
             if input("> ") == "":
                 continue
