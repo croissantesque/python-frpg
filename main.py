@@ -458,7 +458,7 @@ def shop(player):
             tprint(shop_flavor[player.zone]['closed'], 0.02)
             return
         
-        tprint(shop_flavor[player.zone]['welcome'], 0.05)
+        tprint(shop_flavor[player.zone]['welcome'])
 
         print(f"Money: ${player.inventory['coins']}")
         print(f"=== The {shop_names[player.zone]} ===")
