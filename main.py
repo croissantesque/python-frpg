@@ -714,6 +714,7 @@ def workshop(player):
         print("=" * 40)
         tprint(workshop_flavor[player.zone]["welcome"])
         
+        
         stprint("[1] --- Crafting")
         stprint("[2] --- Quests")
         stprint("[0] --- Leave")
@@ -728,6 +729,10 @@ def workshop(player):
             return
 
         if main_select == "1":
+            if not zones["misty_creek"]:
+                stprint("You don't got nuthin' here.")
+                continue
+
             print("=== Crafting ===")
             stprint("[1] --- Rods")
             stprint("[2] --- Baits")  
@@ -1113,11 +1118,10 @@ def logbook(player):
             stprint(f"Caught {player.dex.get(selected_fish, 0)} times.")  
             stprint(f"Found in {', '.join(zone_names)}.")
             stprint(f"{instance.day_rarity} during the day; {instance.night_rarity} at night.")
-            if hasattr(instance, "drops"): 
-                drops = [f"{drop} ({chance}%)" for drop, chance in instance.drops.items()]
-                for drop, chance in instance.drops.items():
-                    drops.append((drop, f"{chance}%"))
-                stprint(f"Drops {', '.join(drops)}")
+            if hasattr(instance, "drops"):
+                drop_list = [f"{display_names['drops'].get(drop, drop)} ({chance*100:.0f}%)" 
+                            for drop, chance in instance.drops.items()]
+                stprint(f"Drops: {', '.join(drop_list)}")
             stprint("Press <enter> to return...")
             if input("> ") == "":
                 continue
