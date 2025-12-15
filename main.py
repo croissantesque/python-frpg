@@ -396,7 +396,7 @@ def shop(player):
         "exit": f'"Come back soon, {player.name}! Don\'t let those fish get too comfortable!"',
         "invalid": '"Huh? You\'ll have to speak clearer, friend!"',
         "invalid_bait": '"That\'s not how we count bait around here, mate!"',
-        "invalid_fish": '"I don\'t think they make fish in that number!"',
+        "invalid_fish": '"That doesn\'t make sense..."',
         "invalid_item": '"Now what kind of item number is that?"',
         "cancel_bait": '"Changed your mind? No worries, take your time!"',
         "cancel_fish": '"No sale? The fish\'ll still be there tomorrow!"',
