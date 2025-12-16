@@ -884,89 +884,85 @@ def workshop(player):
 
 
 
-                if selection == "2": #baits
-                    available_baits = []
-                    for recipe_id, recipe_data in crafting_recipes.items():
-                        if zones[recipe_data["unlock_zone"]] and recipe_data["type"] == "bait":
-                            available_baits.append((recipe_id, recipe_data))
-                    
-                    if not available_baits:
-                        tprint(workshop_flavor[player.zone]["no_recipes"])
-                        continue
-                    
-                    for i, (recipe_id, recipe_data) in enumerate(available_baits, 1):
-                        stprint(f"[{i}] --- {recipe_data['name']} (x{recipe_data['quantity']})")
-                    
-                    stprint("[0] --- Back")
-                    
-                    craft_select = input("> ")
-                    if craft_select == "0":
-                        continue
-                    
-                    if not craft_select.isdigit():
-                        tprint(workshop_flavor[player.zone]['invalid'])
-                        continue
-                    if int(craft_select) < 1 or int(craft_select) > len(available_baits):
-                        tprint(workshop_flavor[player.zone]['working'])
-                        continue
-                    
-                    selected_recipe_id, selected_recipe = available_baits[int(craft_select) - 1]
-                    
-                    tprint(f"-- {selected_recipe['name']} --")
-                    time.sleep(0.05)
-                    stprint(f"Description: {selected_recipe['description']}")
-                    stprint(f"Requirements:")
-                    
-                    can_craft = True
-                    
-                    for req, quantity in selected_recipe["requirements"].items():
-                        display_name = display_names["drops"].get(req) or fish_displays.get(req)
-                        if req in player.inventory['items']:
-                            current = player.inventory['items'].get(req, 0)
-                        elif req in player.inventory['fish']:
-                            current = player.inventory['fish'].get(req, 0)
-                        else:
-                            current = 0
-
-                        status = "✓" if current >= quantity else "✗"
-                        stprint(f" {status} {display_name}: {current}/{quantity}")
-                        if current < quantity:
-                            can_craft = False
-                    
-                    stprint(f" {('✓' if player.inventory['coins'] >= selected_recipe['cost'] else '✗')} Coins: ${player.inventory['coins']}/${selected_recipe['cost']}")
-                    if player.inventory['coins'] < selected_recipe['cost']:
-                        can_craft = False
-                    
-                    stprint("Craft? (y/n)")
-                    confirm = input("> ")
-                    
-                    if confirm == "y":
-                        if can_craft:
-                            for req, quantity in selected_recipe["requirements"].items():
-                                if req in player.inventory["items"]: #checks if item or fish
-                                    player.inventory["items"][req] -= quantity
-                                    if player.inventory["items"][req] == 0:
-                                        del player.inventory["items"][req]
-                                elif req in player.inventory["fish"]:
-                                    player.inventory["fish"][req] -= quantity
-                                    if player.inventory["fish"][req] == 0:
-                                        del player.inventory['fish'][req]
-                            
-                            player.inventory["coins"] -= selected_recipe["cost"]
-                            
-                            bait_id = selected_recipe.get("crafted_item", selected_recipe_id)
-                            player.inventory["baits"][bait_id] = player.inventory["baits"].get(bait_id, 0) + selected_recipe["quantity"]
-                            
-                            craft_time = random.randint(3, 6) 
-                            tprint(f'Crafting bait... (Est. {craft_time} seconds...)', 0.03)
-                            time.sleep(craft_time)
-                            tprint("Completed!", 0.02)
-                            tprint(workshop_flavor[player.zone]['bait_success'])
-                        else:
-                            tprint(workshop_flavor[player.zone]['bait_fail'])
+            elif selection == "2": #baits
+                available_baits = []
+                for recipe_id, recipe_data in crafting_recipes.items():
+                    if zones[recipe_data["unlock_zone"]] and recipe_data["type"] == "bait":
+                        available_baits.append((recipe_id, recipe_data))
+            
+                for i, (recipe_id, recipe_data) in enumerate(available_baits, 1):
+                    stprint(f"[{i}] --- {recipe_data['name']} (x{recipe_data['quantity']})")
+                
+                stprint("[0] --- Back")
+                
+                craft_select = input("> ")
+                if craft_select == "0":
+                    continue
+                
+                if not craft_select.isdigit():
+                    tprint(workshop_flavor[player.zone]['invalid'])
+                    continue
+                if int(craft_select) < 1 or int(craft_select) > len(available_baits):
+                    tprint(workshop_flavor[player.zone]['working'])
+                    continue
+                
+                selected_recipe_id, selected_recipe = available_baits[int(craft_select) - 1]
+                
+                tprint(f"-- {selected_recipe['name']} --")
+                time.sleep(0.05)
+                stprint(f"Description: {selected_recipe['description']}")
+                stprint(f"Requirements:")
+                
+                can_craft = True
+                
+                for req, quantity in selected_recipe["requirements"].items():
+                    display_name = display_names["drops"].get(req) or fish_displays.get(req)
+                    if req in player.inventory['items']:
+                        current = player.inventory['items'].get(req, 0)
+                    elif req in player.inventory['fish']:
+                        current = player.inventory['fish'].get(req, 0)
                     else:
-                        tprint(workshop_flavor[player.zone]['working'])
+                        current = 0
+
+                    status = "✓" if current >= quantity else "✗"
+                    stprint(f" {status} {display_name}: {current}/{quantity}")
+                    if current < quantity:
+                        can_craft = False
+                
+                stprint(f" {('✓' if player.inventory['coins'] >= selected_recipe['cost'] else '✗')} Coins: ${player.inventory['coins']}/${selected_recipe['cost']}")
+                if player.inventory['coins'] < selected_recipe['cost']:
+                    can_craft = False
+                
+                stprint("Craft? (y/n)")
+                confirm = input("> ")
+                
+                if confirm == "y":
+                    if can_craft:
+                        for req, quantity in selected_recipe["requirements"].items():
+                            if req in player.inventory["items"]: #checks if item or fish
+                                player.inventory["items"][req] -= quantity
+                                if player.inventory["items"][req] == 0:
+                                    del player.inventory["items"][req]
+                            elif req in player.inventory["fish"]:
+                                player.inventory["fish"][req] -= quantity
+                                if player.inventory["fish"][req] == 0:
+                                    del player.inventory['fish'][req]
                         
+                        player.inventory["coins"] -= selected_recipe["cost"]
+                        
+                        bait_id = selected_recipe.get("crafted_item", selected_recipe_id)
+                        player.inventory["baits"][bait_id] = player.inventory["baits"].get(bait_id, 0) + selected_recipe["quantity"]
+                        
+                        craft_time = random.randint(3, 6) 
+                        tprint(f'Crafting bait... (Est. {craft_time} seconds...)', 0.03)
+                        time.sleep(craft_time)
+                        tprint("Completed!", 0.02)
+                        tprint(workshop_flavor[player.zone]['bait_success'])
+                    else:
+                        tprint(workshop_flavor[player.zone]['bait_fail'])
+                else:
+                    tprint(workshop_flavor[player.zone]['working'])
+                    
 
         if main_select == "2":
             print("=== Quests ===")
