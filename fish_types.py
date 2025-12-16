@@ -7,19 +7,26 @@ class Fish:
         self.night_rarity = night_rarity
         self.zones = zones
 
-    def escape_chance(self, player_skill, time_of_day):
-        """base chance of fail"""
+    def escape_chance(self, player_skill, time_of_day, bait):
         chance  =  (self.difficulty * 10) - (player_skill * 5)
 
-        if "fast" in self.traits: chance +=  5
-        if "strong" in self.traits: chance += 10
-        if "glow" in self.traits and time_of_day ==  "night": chance -=  10
-        if "camouflage" in self.traits: chance +=  10
-        if "nocturnal" in self.traits: chance +=  0 if time_of_day  ==  "day" else -5
-        if "evasive" in self.traits: chance +=  15
-        if "jumpy" in self.traits: chance += 5
+        if "fast" in self.traits: chance +=  3
+        if "strong" in self.traits: chance += 5
+        if "glow" in self.traits and time_of_day ==  "night": chance -=  5
+        if "camouflage" in self.traits: chance +=  5
+        if "nocturnal" in self.traits: chance +=  0 if time_of_day  ==  "day" else -2.5
+        if "evasive" in self.traits: chance +=  7.5
+        if "jumpy" in self.traits: chance += 2.5
 
-        return max(0, chance)
+        match bait:
+            case "worm": chance -=2
+            case "insects": chance -= 6
+            case "shimmerbait": chance -=10
+            case "glowworms": chance -= 17
+            case "golden_grubs": chance -= 25
+            case "lunar_lure": chance -= 10
+
+        return max(5, min(85,chance))
     
 
 class SmallCarp(Fish):
@@ -32,7 +39,7 @@ class SmallCarp(Fish):
             night_rarity = "Common",
             zones = [0, 1]
         )
-        self.drops = {"wood_plank": 0.3}
+        self.drops = {"wood_plank": 0.25}
         
 
 class Minnow(Fish):
