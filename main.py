@@ -11,14 +11,13 @@ turn = 1
 PERIOD_LENGTH = 12
 
 
-
 quests= {
     "bridge_to_misty_creek": {
         "name": "The Bridge to Misty Creek",
         "rewards": {"skill": 1, "misty_creek": 1}, 
-        "requirements": {"wood_plank": 5}, 
+        "requirements": {"wood_plank": 3}, 
         "status": "hidden", 
-        "description": "The path to Misty Creek is blocked by a fallen bridge. Collect 5 Wood Planks and bring them to the Workshop so the bridge can be repaired.",
+        "description": "The path to Misty Creek is blocked by a fallen bridge. Collect 3 Wood Planks and bring them to the Workshop so the bridge can be repaired.",
         "complete_description": "The path to Misty Creek is now open. You helped repair the bridge by delivering 5 wood planks."
     },
 
@@ -257,7 +256,23 @@ display_names = {
         "glowworms": "glow worms",
         "golden_grubs": "golden grubs"
     },
+    "decor": {
+        "cozy_rug": "Cozy Woven Rug",
+        "oil_lantern": "Brass Oil Lantern",
+        "wooden_chair": "Rustic Wooden Chair", 
+        "small_aquarium": "Small Glass Aquarium",
+        "wall_shelf": "Oak Wall Shelf", 
+        "fishing_trophy_case": "Mounted Trophy Case",
+        "plush_armchair": "Plush Armchair",
+        "glowing_plant_pot": "Glowing Plant Pot",
+        "large_aquarium": "Large Floor Aquarium",
+        "crystal_chandelier": "Crystal Chandelier",
+        "legendary_trophy_plaque": "Legendary Trophy Plaque",
+        "riverside_painting": "Riverside Landscape Painting"
+
+    }
 }
+
 
 
 fish_classes = {
@@ -304,6 +319,37 @@ baits = {
     "lunar_lure": 2
 }
 
+
+decor_descs = {
+    "cozy_rug": "A simple handwoven rug that warms the bare floorboards. Finally, no more cold feet.",
+    "oil_lantern": "A sturdy lantern for soft evening light. Hangs from the wall, casting gentle shadows.",
+    "wooden_chair": "A creaky but comfortable chair by the window, perfect for watching the pond ripple.",
+    "small_aquarium": "A tiny tank for displaying your favorite common catch. Bubbles softly in the corner.",
+    "wall_shelf": "Shelves to display trinkets and rare drops. Clutter, but organized clutter.",
+    "fishing_trophy_case": "A glass case for your proudest mounted fish.",
+    "plush_armchair": "Sink into this overstuffed chair after a long day. Ideal for rainy-night dozing.",
+    "glowing_plant_pot": "A pot with bioluminescent plants from glow scales. Emits a soft, ethereal light at night.",
+    "large_aquarium": "A grand tank showcasing multiple rare fish. The centerpiece of any serious angler's shack.",
+    "crystal_chandelier": "Crafted from lake shards; sparkles like the waters themselves. Pure ostentatious coziness.",
+    "legendary_trophy_plaque": "A golden plaque for your Ghost Carp. The ultimate flex.",
+    "riverside_landscape_painting": "A serene painting of the full watershed. Makes the shack feel vast and connected.",
+}
+
+decor_unlocks = {
+    "cozy_rug": ["misty_creek"],  
+    "oil_lantern": ["misty_creek"],
+    "wooden_chair": ["misty_creek"],
+    "small_aquarium": ["misty_creek"],
+    "wall_shelf": ["shimmering_brook"],
+    "fishing_trophy_case": ["shimmering_brook"],
+    "plush_armchair": ["shimmering_brook"],
+    "glowing_plant_pot": ["crystal_lake"],
+    "large_aquarium": ["crystal_lake"],
+    "crystal_chandelier": ["lake_master"], 
+    "legendary_trophy_plaque": ["lake_guardian"],
+    "riverside_painting": "logbook_100%" #custom check 
+}
+
 shop_prices = {
     "bait": {
         "insects": 80,
@@ -347,9 +393,25 @@ shop_prices = {
         "crystal_shard": 80,
         "moonstone": 120,
         "spectral_fin": 300
+    },
+    "decor": {
+        "cozy_rug": 150,
+        "oil_lantern": 250,
+        "wooden_chair": 300,
+        "small_aquarium": 450,
+        "wall_shelf": 650,
+        "fishing_trophy_case": 900,
+        "plush_armchair": 900,
+        "glowing_plant_pot": 1800,
+        "large_aquarium": 2500,
+        "crystal_chandelier": 3500,
+        "legendary_trophy_plaque": 5000,
+        "riverside_landscape_painting": 8000
     }
-
 }
+
+
+
 
 fish_name_map = {
     "Small Carp": "small_carp",
@@ -430,22 +492,13 @@ class Player:
         self.fishing_skill = 1
         self.luck = 1
         self.gear = {"rod": "wooden_rod", "bait": "worm"}
-        self.inventory = {"fish": {}, "coins": 105, "items": {}, "rods": {}, "baits": {"worm": 10}}
+        self.inventory = {"fish": {}, "coins": 100, "items": {}, "rods": {}, "baits": {"worm": 10}}
         self.zone = 0
         self.dex = {}
         self.shack = {"unlocked": False, "decor": []}
 
 def shop(player):
-    while True:
-
-        shop_names = {
-            0: "Tackle Chest",
-            1: "Rusty Hook",
-            2: "Silver Scale",
-            3: "Crystal Market"
-          }
-        
-        shop_flavor = {
+    shop_flavor = {
     0: {  # Beginner's Pond - Tackle Chest
         "welcome": f'"Hey there, {player.name}! Fresh bait just came in - take a look!"',
         "no_money": '"Tight on coins, eh? The pond\'s full of fish waiting to be caught!"',
@@ -512,11 +565,22 @@ def shop(player):
     }
 }
 
+    tprint(shop_flavor[player.zone]['welcome'])
+
+    while True:
+
+        shop_names = {
+            0: "Tackle Chest",
+            1: "Rusty Hook",
+            2: "Silver Scale",
+            3: "Crystal Market"
+          }
+        
+
         if time_of_day == "night":
             tprint(shop_flavor[player.zone]['closed'], 0.02)
             return
         
-        tprint(shop_flavor[player.zone]['welcome'])
 
         print(f"Money: ${player.inventory['coins']}")
         print(f"=== The {shop_names[player.zone]} ===")
@@ -524,6 +588,7 @@ def shop(player):
         stprint("  [1] --- Buy Bait")
         stprint("  [2] --- Sell Fish")
         stprint("  [3] --- Sell Items")
+        stprint("  [4] --- Buy Home Decor")
         stprint("  [0] --- Exit Shop")
 
         main_selection = input("> ")
@@ -563,7 +628,7 @@ def shop(player):
 
             tprint(f"{display_names['baits'][selected_bait].capitalize()}: costs ${selected_price}. Purchase? (y/n)", 0.01)
             confirm = input("> ")
-            if confirm == "y":
+            if confirm.lower() == "y":
                 player.inventory["coins"] -= selected_price
                 player.inventory["baits"][selected_bait] = player.inventory["baits"].get(selected_bait, 0) + 20
                 print(f"Spent ${selected_price} on {display_names['baits'][selected_bait]}. Use [baits] outside of The Tackle Chest to equip.")
@@ -690,10 +755,87 @@ def shop(player):
             print(f"Sold {drop_external} x{quantity} for ${price_fetched}.")
             tprint(shop_flavor[player.zone]['thanks'])
             continue
+        
+        elif main_selection == "4":
+            available_decor = [] #ones unlocked, either by zone or quest
+            if quests["the_shack"]["status"] in ["active", "hidden"]:
+                tprint("Nothing here just yet... explore more waters!")
+                input(">")
+                continue
+            for item, price in shop_prices["decor"].items():
+                unlock_req = decor_unlocks.get(item, [])
+                if isinstance(unlock_req, list):
+                    if all(req in zones or quests[req]["status"] == "complete" for req in unlock_req):
+                        available_decor.append((item, price))
+                elif unlock_req == "logbook_100%":  
+                    if logbook_completion(player) >= 100:  
+                        available_decor.append((item, price))
+
+            while True:
+                for i, (item,price) in enumerate(shop_prices["decor"].items(), 1):
+                    display_name = display_names["decor"][item]
+                    owned_mark = "[OWNED]" if item in player.shack["decor"] else f"${price}" #show price if not owned
+                    stprint(f"[{i}] {owned_mark} --- {display_name}")
+                stprint("[0] --- Back")
+                stprint("\nMore furnishings will unlock as you master new waters...")
+
+                decor_selection = input(">")
+
+                if not decor_selection.isdigit():
+                    tprint(shop_flavor[player.zone]["invalid"])
+                    continue
+                decor_selection = int(decor_selection)
+                if decor_selection > len(shop_prices["decor"].keys()) or decor_selection < 0:
+                    tprint(shop_flavor[player.zone]["invalid"])
+                    continue
+                
+                if decor_selection == 0:
+                    break
+                    
+
+                decor_list = list(shop_prices["decor"].keys())
+
+                selected_decor = decor_list[decor_selection - 1] #-1 because user input is on 1-index while decor_list is zero-indexed
+                display_name = display_names["decor"][selected_decor]
+                desc = decor_descs[selected_decor]
+                price = shop_prices["decor"][selected_decor]
+                stprint(f"\n --- {display_name} ---")
+                if selected_decor in player.shack["decor"]:
+                    stprint(f"Owned. (${price})")
+                    stprint(desc)
+                    stprint("\n<press enter to return>")
+                    input(">")
+                    continue
+                    
+                else: 
+                    stprint(f"--- ${price} {display_name}")
+                    stprint(f"\n {desc}\n")
+                    if player.inventory["coins"] >= price:
+                        print("You can afford this item.")
+                        print("Purchase? (y/n)")
+                        confirm = input(">")
+                        if confirm.lower() == "y":
+                            player.inventory["coins"] -= price
+                            player.shack["decor"].append(selected_decor)
+                            time.sleep(1)
+                            tprint(f"You purchased the {display_name}! Added to your home.")
+                    tprint("<press enter to continue>")
+                    input(">")
+                    continue
+
+                
+            
+
+
 
         else: 
             tprint(shop_flavor[player.zone]['exit'])
             return
+        
+def logbook_completion(player):
+    if len(player.dex.keys()) >= len(fish_classes.keys()):
+        return True
+    return False
 
 def workshop(player):
 
@@ -767,10 +909,12 @@ def workshop(player):
     if time_of_day == "day":
         tprint(workshop_flavor[player.zone]["day_closed"])
         return
+
+    tprint(workshop_flavor[player.zone]["welcome"])
     while True:
         print("=== Workshop ===")
         print("=" * 40)
-        tprint(workshop_flavor[player.zone]["welcome"])
+        
         
         
         stprint("[1] --- Crafting")
@@ -856,7 +1000,7 @@ def workshop(player):
                 stprint("Craft? (y/n)")
                 confirm = input("> ")
                 
-                if confirm == "y":
+                if confirm.lower() == "y":
                     if can_craft:
                         for req, quantity in selected_recipe["requirements"].items():
                             if req in player.inventory["items"]:
@@ -936,7 +1080,7 @@ def workshop(player):
                 stprint("Craft? (y/n)")
                 confirm = input("> ")
                 
-                if confirm == "y":
+                if confirm.lower() == "y":
                     if can_craft:
                         for req, quantity in selected_recipe["requirements"].items():
                             if req in player.inventory["items"]: #checks if item or fish
@@ -1147,9 +1291,15 @@ def inventory(player):
 
 def shack(player):
     if player.shack['unlocked'] == False:
+        tprint("The shack remains locked...")
         return
 
     tprint("You enter your little cabin; a wooden sign hangs above the doorway, your name hand-carved onto it.")
+    if player.shack["decor"]:
+        tprint("Your shack is adorned with: " + ", ".join([display_names["decor"][-8:].get(decor, decor) for decor in player.shack["decor"]]) + ".")
+        tprint("It brings a touch of warmth to the humble space.")  
+    else:
+        tprint("The shack feels bare - perhaps some furnishings from the shop would help?")
     shack_int(player)
     return
 
@@ -1157,11 +1307,13 @@ def shack(player):
 def shack_int(player):
     while True:
         command = input("Home>")
-        if command in ["exit", "leave", "return"]:
-            tprint("You exit the cabin.")
-            break
-        elif command in ["sleep", "rest"]:
-            sleep_shack(player)
+        match command:
+            case "exit" | "leave" | "return": 
+                tprint("You exit the cabin.")
+                break
+            case "sleep" | "rest":
+                sleep_shack(player)
+        
     return
 
 def sleep_shack(player):
@@ -1181,6 +1333,7 @@ def sleep_shack(player):
         print(" --- The sun rises on the horizon. It's day.")
 
         manage_time()
+    return
 
 
 
@@ -1212,6 +1365,7 @@ def logbook(player):
         
 
         stprint(f"Discovered in visible waters: {unq_found_counter} out of {unq_counter} unique species ({int(unq_found_counter/unq_counter * 100)}%)")
+        stprint(f"Discovered out of whole world: {unq_found_counter} out of {len(fish_classes.keys())} ({int(unq_found_counter/len(fish_classes.keys()) * 100)}%)")
         for i, fish_internal in enumerate(shown_fish, 1):
             fish_external = fish_displays[fish_internal]
             printed = f"{fish_external}" if player.dex.get(fish_internal, 0) > 0 else "? ???"
@@ -1287,11 +1441,16 @@ def switch_bait(player):
                 return
         else:
             selected_bait = baits_list[selection - 1]
+            
             player.gear["bait"] = selected_bait
             if selected_bait == "worm":
                 print("Switched bait to worms (infinite)!")
             else:
                 print(f"Switched bait to {display_names['baits'][selected_bait]} (x{player.inventory['baits'][selected_bait]} left)!")
+            for bait,quantity in player.inventory["baits"].items():
+                if quantity <=0:
+                    del player.inventory["baits"][bait]
+        
             return
         
 def switch_rods(player):
@@ -1409,8 +1568,8 @@ def stprint(line, delay=0.07):
 
 
 def spawn_fish(player_zone, time_of_day):
-    """Spawns a fish based on player zone and time of day"""
-    possible_fish = []
+
+    possible_fish = [] #possible fish - in this zone
     
     current_bait = player.gear["bait"]
     if player.inventory["baits"][current_bait] < 1:
@@ -1422,7 +1581,7 @@ def spawn_fish(player_zone, time_of_day):
     tprint(f"You flick the rod, and the line arcs over the water...", 0.007)
     time.sleep(random.uniform(1, 5))
 
-    if time_of_day == "night" and current_bait == "lunar_lure": #checks for the lunar lure
+    if time_of_day == "night" and current_bait == "lunar_lure": #checks for the lunar lure - only allows nocturnal and glow to be caught
         for fish_name, fish_class in fish_classes.items():
             fish_instance = fish_class()
             if player_zone in fish_instance.zones and ("glow" in fish_instance.traits() or "nocturnal" in fish_instance.traits()):
@@ -1438,13 +1597,15 @@ def spawn_fish(player_zone, time_of_day):
     
     
     current_rod = player.gear['rod']
-    effective_luck = player.luck * rods[current_rod][1]
+    effective_luck = player.luck * rods[current_rod][1] 
+
     if current_weather == "Clear": effective_luck *= 1.15
     if current_weather == "Stormy": effective_luck *= 0.8
-    og_roll = random.random()
-    if random.random() < (effective_luck - 1):
-        roll = min(og_roll, random.random())
-    else: roll = og_roll
+
+    og_roll = random.random() #original roll
+    if random.random() < (effective_luck - 1): #runs a chance for second roll
+        roll = min(og_roll, random.random()) #if so, roll again, pick best of two
+    else: roll = og_roll #single roll
     
     if roll < 0.0008: rolled_type = "Legendary"
     elif roll < 0.0033: rolled_type = "Extremely Rare"
@@ -1453,7 +1614,7 @@ def spawn_fish(player_zone, time_of_day):
     elif roll < 0.2183: rolled_type = "Uncommon"
     else: rolled_type = "Common"
 
-    fish_in_roll = []
+    fish_in_roll = [] #fish in this zone and rarity
     for fish_instance in possible_fish:
         if time_of_day == "day":
             if rolled_type == fish_instance.day_rarity:
@@ -1462,25 +1623,25 @@ def spawn_fish(player_zone, time_of_day):
             if rolled_type == fish_instance.night_rarity:
                 fish_in_roll.append(fish_instance)
 
-    if len(fish_in_roll) == 0: rolled_type = None
+    if len(fish_in_roll) == 0: rolled_type = None #if there are no fish in this rarity, catch seaweed
 
     if rolled_type == None:
         return None
     else: 
-        fish_spawned = random.choice(fish_in_roll)
+        fish_spawned = random.choice(fish_in_roll) 
         return fish_spawned
 
 
-def reel_fish(player, fish, time_of_day, ticks=25, tick_duration=0.4):
-    """Attempt to reel in a fish, uses random, skewed by difficulty + player skill"""
-    if random.randint(1, 100) <= fish.escape_chance(player.fishing_skill, time_of_day):
+def reel_fish(player, fish, time_of_day,tick_duration=0.4):
+
+    if random.randint(1, 100) <= fish.escape_chance(player.fishing_skill, time_of_day, player.gear["bait"]):
         print(f"Oop- the fish wriggles free!")
         return False
     
     success_texts = [
         f"Success! You've landed a {fish.name}!",
         f"Got it! The {fish.name} is yours.",
-        "Victory! The fish is finally in your hands."
+        "Victory! The fish is in your hands."
         ]
     
     fail_texts = [
@@ -1490,11 +1651,17 @@ def reel_fish(player, fish, time_of_day, ticks=25, tick_duration=0.4):
     ]
     
     
+
     progress = 0
     bar_length = 20
+    
     #base calc
     effective_skill = player.fishing_skill + rods[player.gear["rod"]][0] + baits[player.gear["bait"]]
-    effective_difficulty = max(1, fish.difficulty - effective_skill)
+    effective_difficulty = max(0.5, fish.difficulty * 0.8 - effective_skill * 0.6) 
+    ticks = 20 + int(fish.difficulty * 1.2)  #longer total ticks/chances for harder fish
+    progress_chance = min(0.90, 0.35 + (0.07 * effective_skill) - (0.02 * effective_difficulty)) 
+
+
     #weather calc
     if current_weather == "Foggy": effective_difficulty *= 1.15
     elif current_weather == "Stormy": effective_difficulty *= 1.2
@@ -1671,39 +1838,51 @@ while True:
             continue
 
 
-                    
-    if command == "shop":
-        shop(player)
-        turn +=1
-        continue
-    elif command == "workshop":
-        workshop(player)
-        turn +=1
-        continue
-    elif command == "inventory":
-        inventory(player)
-        continue
+                        
+    match command:
+            case "shop":
+                shop(player)
+                turn += 1
+                continue
+            
+            case "workshop":
+                workshop(player)
+                turn += 1
+                continue
+            
+            case "inventory" | "i" | "inv":
+                inventory(player)
+                continue
 
-    elif command == "baits":
-        switch_bait(player)
-        continue
+            case "baits":
+                switch_bait(player)
+                continue
 
-    elif command == "rods":
-        switch_rods(player)
-        continue
-    elif command == "zones":
-        switch_zone(player)
-        turn+=1
-        continue
-    elif command == "info":
-        zone_info(player)
-        continue
-    elif command == "logbook":
-        logbook(player)
-    elif command in ["commands", "help"]:
-        show_commands()
-    elif command in ["home", "cabin", "shack"]:
-        shack(player)
-    
-
-    else: print("That's not a valid command."); continue
+            case "rods":
+                switch_rods(player)
+                continue
+                
+            case "zones":
+                switch_zone(player)
+                turn += 1
+                continue
+                
+            case "info":
+                zone_info(player)
+                continue
+                
+            case "logbook":
+                logbook(player)
+                continue
+                
+            case "commands" | "help": 
+                show_commands()
+                continue
+            
+            case "shack" | "home" | "house":
+                shack(player)
+                continue
+                
+            case _:
+                stprint("That's not a valid command.")
+                continue
