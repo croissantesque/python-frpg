@@ -1447,9 +1447,6 @@ def switch_bait(player):
                 print("Switched bait to worms (infinite)!")
             else:
                 print(f"Switched bait to {display_names['baits'][selected_bait]} (x{player.inventory['baits'][selected_bait]} left)!")
-            for bait,quantity in player.inventory["baits"].items():
-                if quantity <=0:
-                    del player.inventory["baits"][bait]
         
             return
         
@@ -1857,6 +1854,9 @@ while True:
 
             case "baits":
                 switch_bait(player)
+                for bait,quantity in player.inventory["baits"].items():
+                    if quantity <=0:
+                        del player.inventory["baits"][bait]
                 continue
 
             case "rods":
