@@ -151,7 +151,7 @@ crafting_recipes = {
         "type": "rod"
     },
     "lunar_lure": {
-        "name": "Lunar Lure",
+        "name": "Bait Pack (Lunar Lure)",
         "requirements": {
             "glow_scale": 3,
             "moonstone": 1,
@@ -159,10 +159,26 @@ crafting_recipes = {
         },
         "cost": 100,
         "unlock_zone": "crystal_lake",
-        "description": "Glows with moonlight, attracting rare nocturnal fish. Comes in packs of 15.",
+        "description": "Glows with moonlight, attracting rare nocturnal fish. Comes in packs of 25.",
         "type": "bait",
-        "quantity": 15
+        "quantity": 25,
+        "crafted_item": "lunar_lure"
     },
+    "insects": {
+        "name": "Bait Pack (Insects)",
+        "requirements": {
+            "small_carp": 7,
+            "minnow": 3,
+            "wood_plank": 1
+        },
+        "cost": 50,
+        "unlock_zone": "beginners_pond",
+        "description": "Crafts 35 Insects bait. A useful way to recycle common catches.",
+        "type": "bait",
+        "quantity": 35,
+        "crafted_item": "insects"
+
+    }
 }
 
 fish_descriptions = {
@@ -822,11 +838,19 @@ def workshop(player):
                 stprint(f"Requirements:")
                 
                 can_craft = True
-                for item, quantity in selected_recipe["requirements"].items():
-                    has_quantity = player.inventory["items"].get(item, 0)
-                    status = "✓" if has_quantity >= quantity else "✗"
-                    stprint(f" {status} {display_names['drops'][item]}: {has_quantity}/{quantity}")
-                    if has_quantity < quantity:
+                for requirement, quantity in selected_recipe["requirements"].items():
+                    display_name = display_names['drops'].get(requirement) or fish_displays.get(requirement)
+                    
+                    if requirement in player.inventory['items']:
+                        current = player.inventory['items'].get(requirement, 0)
+                    elif requirement in player.inventory['fish']:
+                        current = player.inventory['fish'].get(requirement, 0)
+                    else:
+                        current = 0
+                        
+                    status = "✓" if current >= quantity else "✗"
+                    stprint(f" {status} {display_name}: {current}/{quantity}")
+                    if current < quantity:
                         can_craft = False
                 
                 stprint(f" {('✓' if player.inventory['coins'] >= selected_recipe['cost'] else '✗')} Coins: ${player.inventory['coins']}/${selected_recipe['cost']}")
@@ -838,10 +862,15 @@ def workshop(player):
                 
                 if confirm == "y":
                     if can_craft:
-                        for item, quantity in selected_recipe["requirements"].items():
-                            player.inventory["items"][item] -= quantity
-                            if player.inventory["items"][item] == 0:
-                                del player.inventory["items"][item]
+                        for req, quantity in selected_recipe["requirements"].items():
+                            if req in player.inventory["items"]:
+                                player.inventory["items"][req] -= quantity #checks if drop or fish
+                                if player.inventory["items"][req] == 0:
+                                    del player.inventory["items"][req]
+                            elif req in player.inventory["fish"]: #if fish
+                                player.inventory["fish"][req] -= quantity
+                                if player.inventory["fish"][req] == 0:
+                                    del player.inventory["fish"][req]
                         
                         player.inventory["coins"] -= selected_recipe["cost"]
                         
@@ -860,7 +889,7 @@ def workshop(player):
                 if selection == "2":
                     available_baits = []
                     for recipe_id, recipe_data in crafting_recipes.items():
-                        if zones[recipe_data["unloc k_zone"]] and recipe_data["type"] == "bait":
+                        if zones[recipe_data["unlock_zone"]] and recipe_data["type"] == "bait":
                             available_baits.append((recipe_id, recipe_data))
                     
                     if not available_baits:
@@ -891,11 +920,19 @@ def workshop(player):
                     stprint(f"Requirements:")
                     
                     can_craft = True
-                    for item, quantity in selected_recipe["requirements"].items():
-                        has_quantity = player.inventory["items"].get(item, 0)
-                        status = "✓" if has_quantity >= quantity else "✗"
-                        stprint(f" {status} {display_names['drops'][item]}: {has_quantity}/{quantity}")
-                        if has_quantity < quantity:
+                    
+                    for req, quantity in selected_recipe["requirements"].items():
+                        display_name = display_names["drops"].get(req) or fish_displays.get(req)
+                        if req in player.inventory['items']:
+                            current = player.inventory['items'].get(req, 0)
+                        elif req in player.inventory['fish']:
+                            current = player.inventory['fish'].get(req, 0)
+                        else:
+                            current = 0
+
+                        status = "✓" if current >= quantity else "✗"
+                        stprint(f" {status} {display_name}: {current}/{quantity}")
+                        if current < quantity:
                             can_craft = False
                     
                     stprint(f" {('✓' if player.inventory['coins'] >= selected_recipe['cost'] else '✗')} Coins: ${player.inventory['coins']}/${selected_recipe['cost']}")
@@ -907,14 +944,19 @@ def workshop(player):
                     
                     if confirm == "y":
                         if can_craft:
-                            for item, quantity in selected_recipe["requirements"].items():
-                                player.inventory["items"][item] -= quantity
-                                if player.inventory["items"][item] == 0:
-                                    del player.inventory["items"][item]
+                            for req, quantity in selected_recipe["requirements"].items():
+                                if req in player.inventory["items"]: #checks if item or fish
+                                    player.inventory["items"][req] -= quantity
+                                    if player.inventory["items"][req] == 0:
+                                        del player.inventory["items"][req]
+                                elif req in player.inventory["fish"]:
+                                    player.inventory["fish"][req] -= quantity
+                                    if player.inventory["fish"][req] == 0:
+                                        del player.inventory['fish'][req]
                             
                             player.inventory["coins"] -= selected_recipe["cost"]
                             
-                            bait_id = selected_recipe_id
+                            bait_id = selected_recipe.get("crafted_item", selected_recipe_id)
                             player.inventory["baits"][bait_id] = player.inventory["baits"].get(bait_id, 0) + selected_recipe["quantity"]
                             
                             craft_time = random.randint(3, 6) 
@@ -1407,16 +1449,15 @@ def spawn_fish(player_zone, time_of_day):
     if current_weather == "Stormy": effective_luck *= 0.8
     og_roll = random.random()
     if random.random() < (effective_luck - 1):
-        roll = max(og_roll, random.random())
+        roll = min(og_roll, random.random())
     else: roll = og_roll
     
-    if roll < 0.65: rolled_type = "Common"
-    elif roll < 0.8: rolled_type = "Uncommon"
-    elif roll < 0.85: rolled_type = "Rare"
-    elif roll < 0.865: rolled_type = "Very Rare"
-    elif roll < 0.8675: rolled_type = "Extremely Rare"
-    elif roll < 0.8683: rolled_type = "Legendary"
-    else: rolled_type = None
+    if roll < 0.0008: rolled_type = "Legendary"
+    elif roll < 0.0033: rolled_type = "Extremely Rare"
+    elif roll < 0.0183: rolled_type = "Very Rare"
+    elif roll < 0.0683: rolled_type = "Rare"
+    elif roll < 0.2183: rolled_type = "Uncommon"
+    else: rolled_type = "Common"
 
     fish_in_roll = []
     for fish_instance in possible_fish:
