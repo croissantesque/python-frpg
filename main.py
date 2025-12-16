@@ -1776,7 +1776,12 @@ def start_game_exposition(player):
     time.sleep(1)
 
 def manage_time():
-    global turn, time_of_day, current_hour
+    global turn, time_of_day, current_hour, weather_timer, current_weather
+    weather_timer -= 1
+    if weather_timer <=0:
+        current_weather = random.choice(weather_types)
+        weather_timer = 48
+        stprint(weather_announces[current_weather])
     if turn >= PERIOD_LENGTH:
         turn = 1
         if time_of_day == "day":
@@ -1800,11 +1805,7 @@ while True:
     player.inventory["baits"]["worm"] += 1
 
     check_quest_unlocked(player)
-    weather_timer -= 1
-    if weather_timer <=0:
-        current_weather = random.choice(weather_types)
-        weather_timer = 48
-        stprint(weather_announces[current_weather])
+    
     manage_time()
     command = input("> ")
     if command in ["f", "fish"]:
