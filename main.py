@@ -433,7 +433,7 @@ class Player:
         self.inventory = {"fish": {}, "coins": 105, "items": {}, "rods": {}, "baits": {"worm": 10}}
         self.zone = 0
         self.dex = {}
-        self.shack = {"unlocked": True, "decor": []}
+        self.shack = {"unlocked": False, "decor": []}
 
 def shop(player):
     while True:
@@ -787,10 +787,6 @@ def workshop(player):
             return
 
         if main_select == "1":
-            if not zones["misty_creek"]:
-                tprint("You don't got nuthin' here.")
-                continue
-
             print("=== Crafting ===")
             stprint("[1] --- Rods")
             stprint("[2] --- Baits")  
@@ -886,7 +882,9 @@ def workshop(player):
                 else:
                     tprint(workshop_flavor[player.zone]["craft_cancel"])
 
-                if selection == "2":
+
+
+                if selection == "2": #baits
                     available_baits = []
                     for recipe_id, recipe_data in crafting_recipes.items():
                         if zones[recipe_data["unlock_zone"]] and recipe_data["type"] == "bait":
