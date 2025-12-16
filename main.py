@@ -51,7 +51,7 @@ quests= {
 
     "a_guide_by_scale": {
         "name": "A Guide By Scale", 
-        "rewards": {"skill": 2, "luck": 1.05, "shimmering_brook": 1}, 
+        "rewards": {"skill": 2, "luck": 1.04, "shimmering_brook": 1}, 
         "requirements": {"silverfin": 1, "iron_shard": 3, "glow_scale": 3}, 
         "status": "hidden", 
         "description": "The Silverfin's scales confirm the old tales of the Shimmering Brook upstream. You'll need climbing tools and Glow Scales to mark your way.", 
@@ -70,7 +70,7 @@ quests= {
 
     "luminous_luck": {
         "name": "Luminous Luck", 
-        "rewards": {"money": 250, "luck": 1.08}, 
+        "rewards": {"money": 250, "luck": 1.05}, 
         "requirements": {"glow_scale": 5}, 
         "status": "hidden", 
         "description": "Local legends say that collecting five Glow Scales and arranging them right brings fortune to the fisher. Perhaps there's truth to the tales?", 
@@ -268,7 +268,7 @@ display_names = {
         "large_aquarium": "Large Floor Aquarium",
         "crystal_chandelier": "Crystal Chandelier",
         "legendary_trophy_plaque": "Legendary Trophy Plaque",
-        "riverside_painting": "Riverside Landscape Painting"
+        "riverside_landscape_painting": "Riverside Landscape Painting"
 
     }
 }
@@ -347,7 +347,7 @@ decor_unlocks = {
     "large_aquarium": ["crystal_lake"],
     "crystal_chandelier": ["lake_master"], 
     "legendary_trophy_plaque": ["lake_guardian"],
-    "riverside_painting": "logbook_100%" #custom check 
+    "riverside_landscape_painting": "logbook_100%" #custom check 
 }
 
 shop_prices = {
@@ -564,22 +564,22 @@ def shop(player):
         "no_items": '"The crystals remain silent. You have nothing they desire."'
     }
 }
-
+    
+    if time_of_day == "night":
+        tprint(shop_flavor[player.zone]['closed'], 0.02)
+        return
     tprint(shop_flavor[player.zone]['welcome'])
 
+    shop_names = {
+        0: "Tackle Chest",
+        1: "Rusty Hook",
+        2: "Silver Scale",
+        3: "Crystal Market"
+        }
     while True:
 
-        shop_names = {
-            0: "Tackle Chest",
-            1: "Rusty Hook",
-            2: "Silver Scale",
-            3: "Crystal Market"
-          }
         
 
-        if time_of_day == "night":
-            tprint(shop_flavor[player.zone]['closed'], 0.02)
-            return
         
 
         print(f"Money: ${player.inventory['coins']}")
@@ -631,7 +631,7 @@ def shop(player):
             if confirm.lower() == "y":
                 player.inventory["coins"] -= selected_price
                 player.inventory["baits"][selected_bait] = player.inventory["baits"].get(selected_bait, 0) + 20
-                print(f"Spent ${selected_price} on {display_names['baits'][selected_bait]}. Use [baits] outside of The Tackle Chest to equip.")
+                print(f"Spent ${selected_price} on {display_names['baits'][selected_bait]}. Use [baits] outside of shop to equip.")
                 tprint(shop_flavor[player.zone]['thanks'])
                 continue
             else:
@@ -760,8 +760,9 @@ def shop(player):
             available_decor = [] #ones unlocked, either by zone or quest
             if quests["the_shack"]["status"] in ["active", "hidden"]:
                 tprint("Nothing here just yet... explore more waters!")
-                input(">")
+                input("> ")
                 continue
+
             for item, price in shop_prices["decor"].items():
                 unlock_req = decor_unlocks.get(item, [])
                 if isinstance(unlock_req, list):
@@ -772,14 +773,14 @@ def shop(player):
                         available_decor.append((item, price))
 
             while True:
-                for i, (item,price) in enumerate(shop_prices["decor"].items(), 1):
+                for i, (item,price) in enumerate(available_decor.items(), 1):
                     display_name = display_names["decor"][item]
                     owned_mark = "[OWNED]" if item in player.shack["decor"] else f"${price}" #show price if not owned
                     stprint(f"[{i}] {owned_mark} --- {display_name}")
                 stprint("[0] --- Back")
                 stprint("\nMore furnishings will unlock as you master new waters...")
 
-                decor_selection = input(">")
+                decor_selection = input("> ")
 
                 if not decor_selection.isdigit():
                     tprint(shop_flavor[player.zone]["invalid"])
@@ -804,7 +805,7 @@ def shop(player):
                     stprint(f"Owned. (${price})")
                     stprint(desc)
                     stprint("\n<press enter to return>")
-                    input(">")
+                    input("> ")
                     continue
                     
                 else: 
@@ -813,14 +814,14 @@ def shop(player):
                     if player.inventory["coins"] >= price:
                         print("You can afford this item.")
                         print("Purchase? (y/n)")
-                        confirm = input(">")
+                        confirm = input("> ")
                         if confirm.lower() == "y":
                             player.inventory["coins"] -= price
                             player.shack["decor"].append(selected_decor)
                             time.sleep(1)
                             tprint(f"You purchased the {display_name}! Added to your home.")
                     tprint("<press enter to continue>")
-                    input(">")
+                    input("> ")
                     continue
 
                 
@@ -1236,7 +1237,7 @@ def workshop(player):
                             elif reward in zones:
                                 stprint(f" - {display_names['zones'][reward]} unlocked!")
                             elif reward == "shack":
-                                stprint(f" - Unlocked your personal home and the [home] command")
+                                stprint(f" - Unlocked the [home] command")
                         
                         selected_quest_data['status'] = "complete"
                     
@@ -1296,7 +1297,7 @@ def shack(player):
 
     tprint("You enter your little cabin; a wooden sign hangs above the doorway, your name hand-carved onto it.")
     if player.shack["decor"]:
-        tprint("Your shack is adorned with: " + ", ".join([display_names["decor"][-8:].get(decor, decor) for decor in player.shack["decor"]]) + ".")
+        tprint("Your shack is adorned with: " + ", ".join([display_names["decor"].get(decor, decor) for decor in player.shack["decor"]]) + ".")
         tprint("It brings a touch of warmth to the humble space.")  
     else:
         tprint("The shack feels bare - perhaps some furnishings from the shop would help?")
@@ -1554,7 +1555,6 @@ def switch_zone(player):
     zone_display = display_names['zones'][unlocked_list[selection - 1]]
     player.zone = selection - 1  
     tprint(f"You change fishing zones... Moved to {zone_display}")
-    print(player.zone)
     
     
 #print then wait
