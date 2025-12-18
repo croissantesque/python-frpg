@@ -152,7 +152,7 @@ class CrystalKoi(Fish):
             name = "Crystal Koi",
             difficulty = 6,
             traits = ["glow"],
-            day_rarity = "Very Rare",
+            day_rarity = "Rare",
             night_rarity = "Very Rare",
             zones = [2,3]
         )
@@ -287,3 +287,76 @@ class GhostCarp(Fish):
         )
         self.drops = {"spectral_fin": 0.8}
 
+class SaltMullet(Fish):
+    def __init__(self):
+        super().__init__(
+            name = "Salt Mullet",
+            difficulty = 2,
+            traits = ["fast"],
+            day_rarity = "Common",
+            night_rarity = "Common",
+            zones = [4]
+        )
+
+class RedDrum(Fish):
+    def __init__(self):
+        super().__init__(
+            name = "Red Drum",
+            difficulty = 4,
+            traits = ["strong"],
+            day_rarity = "Uncommon",
+            night_rarity = "Rare",
+            zones = [4]
+        )
+        self.drops = {"seashell": 0.25}
+
+class SpeckledTrout(Fish):
+    def __init__(self):
+        super().__init__(
+            name = "Speckled Trout",
+            difficulty = 4.5,
+            traits = ["jumpy"],
+            day_rarity = "Rare",
+            night_rarity = "Uncommon",
+            zones = [4]
+        )
+        self.drops = {"coral_fragment": 0.2}
+        self.tidal = "Current"
+
+class Flounder(Fish):
+    def __init__(self):
+        super().__init__(
+            name = "Flounder",
+            difficulty = 3.5,
+            traits = ["camouflage"],
+            day_rarity = "Uncommon",
+            night_rarity = "Common",
+            zones = [4]
+        )
+        self.drops = {"seashell": 0.15}
+        self.tidal = "Slack"
+
+class Snook(Fish):
+    def __init__(self):
+        super().__init__(
+            name = "Snook",
+            difficulty = 7.8,
+            traits = ["evasive"],
+            day_rarity = "Rare",
+            night_rarity = "Very Rare",
+            zones = [4]
+        )
+        self.drops = {"coral_fragment": 0.3, "seashell": 0.2}
+
+class Tarpon(Fish):
+    def __init__(self):
+        super().__init__(
+            name = "Tarpon",
+            difficulty = 11.8,
+            traits = ["jumpy", "strong"],
+            day_rarity = "Extremely Rare",
+            night_rarity = "Legendary",
+            zones = [4]
+        )
+        self.drops = {"abyssal_crystal": 100}
+        self.tidal = "Current"
