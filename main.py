@@ -1359,7 +1359,7 @@ def view_journal(player):
     stprint(f"Bait: {display_names['baits'][bait]}")
     stprint(f"--   +{bait_skill} skill, +{bait_luck_buff} luck")
 
-    total_skill = player.skill + rod_skill + bait_skill
+    total_skill = player.fishing_skill + rod_skill + bait_skill
     total_luck = player.luck + bait_luck_buff + rod_luck
 
     stprint(f"\n--- Effective Totals ---")
