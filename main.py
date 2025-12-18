@@ -1881,7 +1881,7 @@ def zone_info(player):
     print("Press <enter> to continue...")
     input("> ")
 
-def setlines(quantity):
+def setlines(quantity, player, time_of_day):
     global turn, setting_lines, caught_while_setlines
     
     caught_while_setlines = {
@@ -1913,7 +1913,7 @@ def setlines(quantity):
     setting_lines = True
     turns_used = math.ceil(quantity/10)
     for _ in range(quantity):
-        spawn_fish()
+        spawn_fish(player.zone, time_of_day)
     tprint("You set your lines and wait awhile.")
     time.sleep(2)
     tprint(f"\nLines set, fish caught. {turns_used} hours have passed. Results:")
@@ -2102,7 +2102,7 @@ while True:
                     stprint("Bad usage - try again with setlines <quantity>")
                     continue
                 setquantity = para_command[1]
-                setlines(setquantity)
+                setlines(setquantity, player, time_of_day)
 
                 
                 
