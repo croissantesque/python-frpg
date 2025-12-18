@@ -18,6 +18,22 @@ time_of_day = "day"
 turn = 1
 PERIOD_LENGTH = 12
 
+tide = "High"
+tide_timer = 24
+tide_types = ["High", "Outgoing", "Low", "Incoming"]
+tide_announces = {
+    "High": "The tide surges high - shallows teem with life...",
+    "Incoming": "Incoming tide stirs the estuary—fish are ravenous!",
+    "Low": "Low tide exposes the mudflats...",
+    "Outgoing": "Outgoing tide pulls bait seaward—predators chase!"
+}
+tide_descs = {
+    "High": "(Shallows active, but slack...)",
+    "Incoming": "(Moving water! Luck +20%)",
+    "Low": "(Channels only, slack...)",
+    "Outgoing": "(Big chases! Luck +20%)"
+}
+
 setting_lines = False
 caught_while_setlines = {
     "fish": {},
@@ -27,7 +43,7 @@ caught_while_setlines = {
 quests= {
     "bridge_to_misty_creek": {
         "name": "The Bridge to Misty Creek",
-        "rewards": {"skill": 1, "misty_creek": 1}, 
+        "rewards": {"skill": 0.5, "misty_creek": 1}, 
         "requirements": {"wood_plank": 3}, 
         "status": "hidden", 
         "description": "The path to Misty Creek is blocked by a fallen bridge. Collect 3 Wood Planks and bring them to the Workshop so the bridge can be repaired.",
@@ -64,7 +80,7 @@ quests= {
 
     "a_guide_by_scale": {
         "name": "A Guide By Scale", 
-        "rewards": {"skill": 2, "luck": 0.04, "shimmering_brook": 1}, 
+        "rewards": {"skill": 0.8, "luck": 0.04, "shimmering_brook": 1}, 
         "requirements": {"silverfin": 1, "iron_shard": 3, "glow_scale": 3}, 
         "status": "hidden", 
         "description": "The Silverfin's scales confirm the old tales of the Shimmering Brook upstream. You'll need climbing tools and Glow Scales to mark your way.", 
@@ -92,7 +108,7 @@ quests= {
     
     "crystal_lake_expedition": {
         "name": "The Crystal Lake Expedition", 
-        "rewards": {"skill": 2, "crystal_lake": 1},
+        "rewards": {"skill": 1.2, "crystal_lake": 1},
         "requirements": {"crystal_koi": 1, "glow_scale": 5, "river_pearl": 4},
         "status": "hidden",
         "description": "The Crystal Koi proves the legends of a pristine high-altitude lake. You'll need light sources and purification pearls to reach it.",
@@ -101,7 +117,7 @@ quests= {
 
     "lake_master": {
         "name": "Lake Master",
-        "rewards": {"skill": 2, "money": 300, "luck": 0.08},
+        "rewards": {"skill": 1.5, "money": 300, "luck": 0.08},
         "requirements": {"moonlight_guppy": 1, "deepwater_sturgeon": 1, "prism_trout": 1, "abyssal_angler": 1, "lunar_trout": 1},
         "status": "hidden",
         "description": "Master the powerful Crystal Lake by catching each of its mystical inhabitants.",
@@ -110,19 +126,28 @@ quests= {
 
     "lake_guardian": {
         "name": "The Lake Guardian",
-        "rewards": {"skill": 2, "money": 800, "luck": 0.1},
+        "rewards": {"skill": 3, "money": 800, "luck": 0.15},
         "status": "hidden",
         "requirements": {"ghost_carp": 1},
         "description": "The lake's legendary mystery awaits. Prove your worth by catching the fabled Ghost Carp.",
         "complete_description": "You've finally captured the rumoured guardian of the lake! You are a true master of these waters."
-    }
+    },
+    "coastal_awakening": {
+    "name": "Call of the Coast",
+    "rewards": {"tidal_estuary": 1, "skill": 1, "luck": 0.02},
+    "requirements": {}, #free unlock
+    "status": "hidden",
+    "description": "Whispers from the lake hint at vast saltwater realms. The tutorial waters were just the beginning.",
+    "complete_description": "The estuary awaits - tides and tempests call."
+},
 }
 
 zones = {
     "beginners_pond": True,
     "misty_creek": False,
     "shimmering_brook": False,
-    "crystal_lake": False
+    "crystal_lake": False,
+    "tidal_estuary": False
 }
 
 crafting_recipes = {
@@ -160,6 +185,18 @@ crafting_recipes = {
         "cost": 500,
         "unlock_zone": "crystal_lake",
         "description": "A rod made from Crystal Lake materials, excellent for finding rare fish.",
+        "type": "rod"
+    },
+    "saltwater_rod": {
+        "name": "Saltwater Rod",
+        "requirements": {
+            "seashell": 4, 
+            "coral_fragment": 3,
+            "iron_shard": 3
+            },
+        "cost": 350,
+        "unlock_zone": "tidal_estuary",
+        "description": "Coral-wrapped for tidal titans.",
         "type": "rod"
     },
     "lunar_lure": {
@@ -215,7 +252,13 @@ fish_descriptions = {
     "prism_trout": "Their scales refract light into rainbow patterns. Each movement creates a dazzling display of colors in the clear water. [Glows] [Evasive]",
     "abyssal_angler": "Uses a natural bioluminescent lure to attract prey in the dark depths. Its sharp teeth can cut through fishing line. [Glows] [Strong]",
     "lunar_trout": "Synchronized with the moon's cycles. Becomes more active and energetic during full moon nights. [Nocturnal] [Jumpy]",
-    "ghost_carp": "So pale it's nearly transparent. Legends say it's the spirit of the lake itself, rarely seen by mortal eyes. [Camouflage]"
+    "ghost_carp": "So pale it's nearly transparent. Legends say it's the spirit of the lake itself, rarely seen by mortal eyes. [Camouflage]",
+    "salt_mullet": "Small, hyperactive schoolers darting through brackish murk. [Fast]",
+    "red_drum": "Copper-scaled brute haunting oyster bars. Loves a fight. [Strong]",
+    "speckled_trout": "Spotted ambushers leaping through churning tides. [Jumpy] [Changing Tides]",
+    "flounder": "Flat freak blending into muddy bottoms like a coward. [Camouflage] [Slack Tides]",
+    "snook": "Sleek lineslayers, gone in a silver flash. [Evasive]",
+    "tarpon": "Aerial acrobats ruling the flats—legends for masochists. [Jumpy] [Strong] [Current Tides]"
 }
 
 weather_types = ["Clear", "Rainy", "Stormy", "Foggy"]
@@ -239,17 +282,16 @@ display_names = {
         "beginners_pond": "Beginner's Pond",
         "misty_creek": "Misty Creek",
         "shimmering_brook": "Shimmering Brook",
-        "crystal_lake": "Crystal Lake"
+        "crystal_lake": "Crystal Lake",
+        "tidal_estuary": "Tidal Estuary"
     },
 
     "rods": {
         "wooden_rod": "Wooden Rod",
         "iron_rod": "Iron Rod",
         "azure_rod": "Azure Rod",
-        "steel_rod": "Steel Rod",
-        "silver_rod": "Silver Rod",
-        "gold_rod": "Gold Rod",
-        "mythic_rod": "Mythic Rod",
+        "crystal_rod": "Crystal Rod",
+        "saltwater_rod": "Saltwater Rod"
     },
     "drops": {
         "wood_plank": "Wood Plank",
@@ -260,14 +302,18 @@ display_names = {
         "glow_scale": "Glow Scale",
         "crystal_shard": "Crystal Shard",
         "moonstone": "Moonstone",
-        "spectral_fin": "Spectral Fin"
+        "spectral_fin": "Spectral Fin",
+        "coral_fragment": "Coral Fragment",
+        "abyssal_crystal": "Abyssal Crystal",
+        "seashell": "Seashell"
     },
     "baits": {
         "worm": "worms",
         "insects": "insects",
         "shimmerbait": "shimmerbait",
         "glowworms": "glow worms",
-        "golden_grubs": "golden grubs"
+        "golden_grubs": "golden grubs",
+        "lunar_lure": "Lunar Lure"
     },
     "decor": {
         "cozy_rug": "Cozy Woven Rug",
@@ -310,7 +356,13 @@ fish_classes = {
     "prism_trout": fish_types.PrismTrout,
     "abyssal_angler": fish_types.AbyssalAngler,
     "lunar_trout": fish_types.LunarTrout,
-    "ghost_carp": fish_types.GhostCarp
+    "ghost_carp": fish_types.GhostCarp,
+    "salt_mullet": fish_types.SaltMullet,
+    "red_drum": fish_types.RedDrum,
+    "speckled_trout": fish_types.SpeckledTrout,
+    "flounder": fish_types.Flounder,
+    "snook": fish_types.Snook,
+    "tarpon": fish_types.Tarpon
 }
 fish_class_inv = {v: k for k,v in fish_classes.items()}
 all_fish = list(fish_classes.keys())
@@ -321,6 +373,7 @@ rods = {
     "azure_rod": (1.4, 0.1),     
     "steel_rod": (2.2, 0),     
     "crystal_rod": (2, 0.17),
+    "saltwater_rod": (2.2,0.12)
 }
 
 baits = {
@@ -399,7 +452,13 @@ shop_prices = {
         "prism_trout": 160,
         "abyssal_angler": 100,
         "lunar_trout": 95,
-        "ghost_carp": 800
+        "ghost_carp": 800,
+        "salt_mullet":6, 
+        "red_drum":45, 
+        "speckled_trout":65, 
+        "flounder":35, 
+        "snook":220,
+        "tarpon":1400
     },
 
     "drops": {
@@ -411,7 +470,10 @@ shop_prices = {
         "glow_scale": 35,
         "crystal_shard": 80,
         "moonstone": 120,
-        "spectral_fin": 300
+        "spectral_fin": 300,
+        "seashell": 25,
+        "coral_fragment": 48,
+        "abyssal_crystal": 150
     },
     "decor": {
         "cozy_rug": 150,
@@ -454,7 +516,13 @@ fish_name_map = {
     "Prism Trout": "prism_trout",
     "Abyssal Angler": "abyssal_angler",
     "Lunar Trout": "lunar_trout",
-    "Ghost Carp": "ghost_carp"
+    "Ghost Carp": "ghost_carp",
+    "Salt Mullet": "salt_mullet",
+    "Red Drum": "red_drum",
+    "Speckled Trout": "speckled_trout",
+    "Flounder": "flounder",
+    "Snook": "snook",
+    "Tarpon": "tarpon"
 }
 
 
@@ -558,6 +626,22 @@ def shop(player):
         "cancel_item": '"Some treasures are meant to be kept."',
         "no_fish": '"The lake gives nothing to idle hands. Cast your line deeper."',
         "no_items": '"The crystals remain silent. You have nothing they desire."'
+    },
+    4: {  # Tidal Estuary - Briny Barrow
+        "welcome": '"Arr, fresh meat from the sweetwater ponds? Tides\'ll chew ya up if ye ain\'t prepared. What\'ll it be, landlubber?"',
+        "no_money": '"No coin? Then ye\'re as useless as a slack tide. Come back when ye\'ve sold some proper fish."',
+        "thanks": '"That\'ll do. Now get out there \'fore the tide turns - don\'t waste me time."',
+        "closed": "The Briny Barrow's shutters are slammed against the night wind. A faded sign creaks: 'Gone haulin' traps. Tides wait for no one.'",
+        "exit": '"Mind the mudflats on yer way out. Wouldn\'t want ye sinkin\' before the fish get a chance."',
+        "invalid": '"What kinda bilge is that? Speak plain or shove off!"',
+        "invalid_bait": '"Count yer bait proper, or I\'ll count ye out."',
+        "invalid_fish": '"Ye tryin\' to sell me ghost stories? That fish ain\'t real."',
+        "invalid_item": '"Never seen such rubbish in all me years. Try again."',
+        "cancel_bait": '"Changed yer mind? Figures—lake folk always do."',
+        "cancel_fish": '"Keepin\' it? Suit yerself. More for the gulls."',
+        "cancel_item": '"Hoardin\' yer finds? Smart, for once."',
+        "no_fish": '"Empty-handed? The estuary\'s teemin\'—git to castin\'!"',
+        "no_items": '"Nothin\' to trade? The tides bring treasures to those who earn \'em."'
     }
 }
     
@@ -910,6 +994,22 @@ def workshop(player):
         "quest_complete": '"You handled that better than most. Maybe you\'ve got what it takes for these waters."',
         "quest_view": '"These are the jobs that need doing up here. Take your pick if you think you can handle it."',
         "working": '"*sharpening tools* High-altitude maintenance. Never ends."'
+    },
+    4: {  # Tidal Estuary - Salt-Crusted Forge
+        "welcome": '"Back again, pond-dweller? The sea don\'t craft gear for the faint-hearted. Show me yer haul or shove off."',
+        "day_closed": '"Forge\'s cold during the day. I\'m out mendin\' nets with the tide. Return after dark, if ye dare the mudflats."',
+        "exit": '"Mind the outgoing tide on yer way out. It\'ll swallow fools whole."',
+        "invalid": '"Bilge-rat babble. Speak plain or the crabs\'ll have yer tongue."',
+        "no_recipes": '"Ye ain\'t earned saltwater secrets yet. Go wrestle a tarpon first."',
+        "no_quests": '"No errands for green gills. The estuary tests ye without my help."',
+        "craft_success": '"There. Forged tough as barnacles. Might even last ye a tide or two."',
+        "craft_fail": '"Missin\' the good stuff. Tides don\'t yield treasures to the lazy."',
+        "craft_cancel": '"Wise choice. Brine gear ain\'t for wavering hands."',
+        "bait_success": '"Potent bait. Should lure the beasts—if yer arms don\'t give out first."',
+        "bait_fail": '"Short on shells and grit. Dig deeper or drown tryin\'."',
+        "quest_complete": '"Not bad. Maybe the sea won\'t claim ye just yet."',
+        "quest_view": '"These are the burdens of the coast. Take one if ye think yer backbone\'s salted enough."',
+        "working": '"*hammering coral into shape* Tides wait for no man. Neither do I."'
     }
 }
 
@@ -1236,7 +1336,7 @@ def workshop(player):
                             if reward == "skill":
                                 stprint(f" - +{spec} Fishing Skill")
                             elif reward == "luck":
-                                stprint(f" - +{spec} Base Fishing Luck")
+                                stprint(f" - +{spec}% Base Fishing Luck")
                             elif reward == "money": 
                                 stprint(f" - +{spec} coins!")
                             elif reward in zones:
@@ -1619,11 +1719,17 @@ def check_quest_unlocked(player):
     if quests["pond_master"]["status"] == 'complete' and quests["the_shack"]["status"] == "hidden": 
         unlock_quest("the_shack")
     
+    if quests["lake_master"]["status"] == "complete" and quests["coastal_awakening"]["status"] == "hidden":
+        quests["coastal_awakening"]["status"] = "complete" 
+        zones["tidal_estuary"] = True
+        tprint("The distant roar of waves calls to you... New waters are unlocked!")
+    
     
 
 
 
 def switch_zone(player):
+    global turn
     print("\n--- Unlocked Fishing Zones ---\n")
     unlocked_list = []
     for i, (zone_code, status) in enumerate(zones.items(), 1):
@@ -1646,9 +1752,18 @@ def switch_zone(player):
     if selection < 1 or selection > len(unlocked_list):
         print("That's not an option...")
         return
+    
+    old_zone = player.zone
+    player.zone = selection - 1
+    distance = abs(player.zone - old_zone)
+    travel_turns = max(1, distance * 2)  
+    if time_of_day == "night" and distance > 2:
+        travel_turns += 2
+        tprint("Night travel's treacherous - extra time lost to stumbles.")
+    turn += travel_turns
+    manage_time()  
     zone_display = display_names['zones'][unlocked_list[selection - 1]]
-    player.zone = selection - 1  
-    tprint(f"You change fishing zones... Moved to {zone_display}")
+    tprint(f"You journey {distance} zones away... ({travel_turns} hours pass). Arrived at {zone_display}.")
     
     
 #print then wait
@@ -1684,6 +1799,11 @@ def spawn_fish(player_zone, time_of_day):
             if player_zone in fish_instance.zones:
                 if time_of_day == "night" and fish_instance.night_rarity == "Not Found": continue
                 elif time_of_day == "day" and fish_instance.day_rarity == "Not Found": continue
+                if hasattr(fish_instance, "tidal"):
+                    if fish_instance.tidal == "Current" and tide not in ["Outgoing", "Incoming"]:
+                        continue
+                    elif fish_instance.tidal == "Slack" and tide not in ["High", "Low"]:
+                        continue
                 possible_fish.append(fish_instance)
     
     if not possible_fish:
@@ -1805,7 +1925,7 @@ def reel_fish(player, fish, time_of_day,tick_duration=0.4):
     #weather calc
     if current_weather == "Foggy": effective_difficulty *= 1.15
     elif current_weather == "Stormy": effective_difficulty *= 1.2
-    elif "Rainy" and "nocturnal" in fish.traits: effective_skill *= 1.25
+    elif current_weather == "Rainy" and "nocturnal" in fish.traits: effective_skill *= 1.25
 
     #lunar bait calc
     if time_of_day == "night" and player.gear['bait'] == "lunar_lure": effective_skill += 4
@@ -2002,12 +2122,24 @@ def start_game_exposition(player):
 
 def manage_time():
     global turn, time_of_day, current_hour, weather_timer, current_weather
-    
+    global tide, tide_timer
+
     weather_timer -= 1 #WEATHER
     if weather_timer <= 0:
         current_weather = random.choice(weather_types)
         weather_timer = 48
         stprint(weather_announces[current_weather])
+
+    if player.zone >= 4:  #coast
+        tide_timer -= 1
+    if tide_timer <= 0:
+        current_index = tide_types.index(tide)
+        tide = tide_types[(current_index + 1) % 4]
+        if player.zone >= 4:
+            stprint(tide_announces[tide])
+        tide_timer = 24
+
+
 
     
     turn += 1
@@ -2038,8 +2170,11 @@ def manage_time():
         current_hour = 18 + cycle_step
         if current_hour >= 24:
             current_hour -= 24
+    if player.zone < 4:
+        print(f"--- {current_hour:02d}:00 | {time_of_day.capitalize()} | {current_weather} {weather_descs[current_weather]}")
+    else: 
+        print(f"--- {current_hour:02d}:00 | {time_of_day.capitalize()} | {current_weather} {weather_descs[current_weather]} | Tide: {tide} {tide_descs[tide]}")
 
-    print(f"--- {current_hour:02d}:00 | {time_of_day.capitalize()} | {current_weather} {weather_descs[current_weather]}")
 
 start_game_exposition(player)
 while True:
@@ -2090,9 +2225,8 @@ while True:
                 switch_rods(player)
                 continue
                 
-            case "zones":
+            case "zones" | "zone":
                 switch_zone(player)
-                turn += 1
                 continue
                 
             case "info":
