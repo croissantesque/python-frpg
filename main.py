@@ -2,15 +2,27 @@ import fish_types
 import random
 import time
 import sys
-
-
+import math
+try:
+    import msvcrt  # Windows
+    def flush_input():
+        while msvcrt.kbhit():
+            msvcrt.getch()
+except ImportError:
+    import termios  # Linux / Mac
+    def flush_input():
+        termios.tcflush(sys.stdin, termios.TCIFLUSH)
 
 
 time_of_day = "day"
 turn = 1
 PERIOD_LENGTH = 12
 
-
+setting_lines = False
+caught_while_setlines = {
+    "fish": {},
+    "drops": {}
+}
 quests= {
     "bridge_to_misty_creek": {
         "name": "The Bridge to Misty Creek",
@@ -23,7 +35,7 @@ quests= {
 
     "pond_master": {
         "name": "Pond Master",
-        "rewards": {"skill": 1, "money": 150, "luck": 1.03},
+        "rewards": {"skill": 1, "money": 150, "luck": 0.03},
         "requirements": {"small_carp": 1, "minnow": 1, "pond_perch": 1, "night_goby": 1, "shimmerfin": 1},
         "status": "hidden",
         "description": "Catch and deliver one of each of Beginner Pond's fish. Prove your foundational fishing skills!",
@@ -32,17 +44,17 @@ quests= {
 
     "the_shack": {
         "name": "The Old Wooden Shack",
-        "rewards": {"luck": 1.04, "shack": 1,},
+        "rewards": {"luck": 0.04, "shack": 1,},
         "requirements": {"iron_shard": 3, "wood_plank": 3, "glow_scale": 2},
         "status": "hidden",
         "description": "Overlooking Beginner's Pond sits a weathered old shack, abandoned but sturdy. With a few repairs and a touch of light from Glow Scales, it could become your personal home to rest between casts.",
-        "complete_description": "You've patched up the Old Wooden Shack! It now stands cozy and warm by the pond's edge. For the first time, the waters feel a little like home. (Unlocks [home] command.)"
+        "complete_description": "You've patched up the Old Wooden Shack! It now stands cozy and warm by the pond's edge. For the first time, the waters feel a little like home. (Unlocks [home] and [setlines] commands)"
         
     },
 
     "creek_master": {
         "name": "Misty Creek Master",
-        "rewards": {"skill": 1, "money": 250, "luck": 1.04},
+        "rewards": {"skill": 1, "money": 250, "luck": 0.04},
         "requirements": {"small_carp": 1, "minnow": 1, "trout": 1, "bass": 1, "glowfish": 1, "frogfish": 1, "silverfin": 1},
         "status": "hidden",
         "description": "Conquer Misty Creek's diverse fish. Each fish teaches a different angling technique.", 
@@ -51,7 +63,7 @@ quests= {
 
     "a_guide_by_scale": {
         "name": "A Guide By Scale", 
-        "rewards": {"skill": 2, "luck": 1.04, "shimmering_brook": 1}, 
+        "rewards": {"skill": 2, "luck": 0.04, "shimmering_brook": 1}, 
         "requirements": {"silverfin": 1, "iron_shard": 3, "glow_scale": 3}, 
         "status": "hidden", 
         "description": "The Silverfin's scales confirm the old tales of the Shimmering Brook upstream. You'll need climbing tools and Glow Scales to mark your way.", 
@@ -61,7 +73,7 @@ quests= {
     
     "brook_master": {
         "name": "Shimmering Brook Master",
-        "rewards": {"skill": 1, "money": 350, "luck": 1.03},
+        "rewards": {"skill": 1, "money": 350, "luck": 0.03},
         "requirements": {"minnow": 1, "rapidfin_trout": 1, "carp": 1, "perch": 1, "shadowfin": 1, "azure_gill": 1, "crystal_koi": 1},
         "status": "hidden", 
         "description": "The Shimmering Brook ecosystem requires specialized knowledge. Catch 'em all!",
@@ -70,7 +82,7 @@ quests= {
 
     "luminous_luck": {
         "name": "Luminous Luck", 
-        "rewards": {"money": 250, "luck": 1.05}, 
+        "rewards": {"money": 250, "luck": 0.05}, 
         "requirements": {"glow_scale": 5}, 
         "status": "hidden", 
         "description": "Local legends say that collecting five Glow Scales and arranging them right brings fortune to the fisher. Perhaps there's truth to the tales?", 
@@ -88,7 +100,7 @@ quests= {
 
     "lake_master": {
         "name": "Lake Master",
-        "rewards": {"skill": 2, "money": 300, "luck": 1.08},
+        "rewards": {"skill": 2, "money": 300, "luck": 0.08},
         "requirements": {"moonlight_guppy": 1, "deepwater_sturgeon": 1, "prism_trout": 1, "abyssal_angler": 1, "lunar_trout": 1},
         "status": "hidden",
         "description": "Master the powerful Crystal Lake by catching each of its mystical inhabitants.",
@@ -97,7 +109,7 @@ quests= {
 
     "lake_guardian": {
         "name": "The Lake Guardian",
-        "rewards": {"skill": 2, "money": 800, "luck": 1.1},
+        "rewards": {"skill": 2, "money": 800, "luck": 0.1},
         "status": "hidden",
         "requirements": {"ghost_carp": 1},
         "description": "The lake's legendary mystery awaits. Prove your worth by catching the fabled Ghost Carp.",
@@ -299,15 +311,15 @@ fish_classes = {
     "lunar_trout": fish_types.LunarTrout,
     "ghost_carp": fish_types.GhostCarp
 }
-
+fish_class_inv = {v: k for k,v in fish_classes.items()}
 all_fish = list(fish_classes.keys())
 
 rods = {
-    "wooden_rod": (1, 1.05),
-    "iron_rod": (1.5, 1),  
-    "azure_rod": (1.4, 1.1),     
-    "steel_rod": (2.2, 1),     
-    "crystal_rod": (2, 1.25),
+    "wooden_rod": (1, 0.05),
+    "iron_rod": (1.5, 0),  
+    "azure_rod": (1.4, 0.1),     
+    "steel_rod": (2.2, 0),     
+    "crystal_rod": (2, 0.17),
 }
 
 baits = {
@@ -318,7 +330,13 @@ baits = {
     "golden_grubs": 5,
     "lunar_lure": 2
 }
-
+bait_luck = {
+    "worm": 0, 
+    "insects": 0.05,
+    "shimmerbait": 0.13,
+    "glowworms": 0.20,
+    "golden_grubs": 0.25
+}
 
 decor_descs = {
     "cozy_rug": "A simple handwoven rug that warms the bare floorboards. Finally, no more cold feet.",
@@ -436,34 +454,11 @@ fish_name_map = {
     "Abyssal Angler": "abyssal_angler",
     "Lunar Trout": "lunar_trout",
     "Ghost Carp": "ghost_carp"
-
 }
 
-fish_displays = {
-    "small_carp": "Small Carp",
-    "minnow": "Minnow",
-    "pond_perch": "Pond Perch",
-    "night_goby": "Night Goby",
-    "shimmerfin": "Shimmerfin",
-    "trout": "Trout",
-    "bass": "Bass",
-    "glowfish": "Glowfish",
-    "frogfish": "Frogfish",
-    "silverfin": "Silverfin",
-    "crystal_koi": "Crystal Koi",
-    "rapidfin_trout": "Rapidfin Trout",
-    "carp": "Carp",
-    "perch": "Perch", 
-    "shadowfin": "Shadowfin",
-    "azure_gill": "Azure Gill",
-    "moonlight_guppy": "Moonlight Guppy",
-    "deepwater_sturgeon": "Deepwater Sturgeon",
-    "prism_trout": "Prism Trout", 
-    "abyssal_angler": "Abyssal Angler",
-    "lunar_trout": "Lunar Trout",
-    "ghost_carp": "Ghost Carp"
-}
 
+
+fish_displays = {v: k for k,v in fish_name_map.items()}
 
 
 sleep_prints = {
@@ -490,7 +485,7 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.fishing_skill = 1
-        self.luck = 1
+        self.luck = 1                                                                                                                  #revert 100
         self.gear = {"rod": "wooden_rod", "bait": "worm"}
         self.inventory = {"fish": {}, "coins": 100, "items": {}, "rods": {}, "baits": {"worm": 10}}
         self.zone = 0
@@ -760,20 +755,30 @@ def shop(player):
             available_decor = [] #ones unlocked, either by zone or quest
             if quests["the_shack"]["status"] in ["active", "hidden"]:
                 tprint("Nothing here just yet... explore more waters!")
-                input("> ")
+                input("<press enter to return> ")
                 continue
 
             for item, price in shop_prices["decor"].items():
                 unlock_req = decor_unlocks.get(item, [])
                 if isinstance(unlock_req, list):
-                    if all(req in zones or quests[req]["status"] == "complete" for req in unlock_req):
+                    checked = True
+                    for req in unlock_req:
+                        if req in zones:
+                            if not zones[req]: 
+                                checked = False
+                                break
+                        elif req in quests:
+                            if not quests[req]["status"] == "complete":
+                                checked = False
+                                break
+                    if checked:
                         available_decor.append((item, price))
                 elif unlock_req == "logbook_100%":  
-                    if logbook_completion(player) >= 100:  
+                    if logbook_completion(player):
                         available_decor.append((item, price))
 
             while True:
-                for i, (item,price) in enumerate(available_decor.items(), 1):
+                for i, (item,price) in enumerate(available_decor, 1):
                     display_name = display_names["decor"][item]
                     owned_mark = "[OWNED]" if item in player.shack["decor"] else f"${price}" #show price if not owned
                     stprint(f"[{i}] {owned_mark} --- {display_name}")
@@ -1111,7 +1116,6 @@ def workshop(player):
 
         if main_select == "2":
             print("=== Quests ===")
-            print("\n --- Active ---")
             active_quests = []
             complete_quests = []
             unlocked_quests_list = []
@@ -1124,7 +1128,7 @@ def workshop(player):
 
             unlocked_quests_list = active_quests + complete_quests
 
-            print("\n --- Active ---")
+            print("\n\n --- Active ---")
             for i, quest_id in enumerate(active_quests, 1):
                 stprint(f"[{i}] --- {quests[quest_id]['name']}")
 
@@ -1216,7 +1220,7 @@ def workshop(player):
                             elif reward == "skill": 
                                 player.fishing_skill += spec
                             elif reward == "luck":
-                                player.luck = player.luck * spec
+                                player.luck += spec
                             elif reward == "money":
                                 player.inventory["coins"] += spec
                             elif reward == "shack":
@@ -1231,13 +1235,13 @@ def workshop(player):
                             if reward == "skill":
                                 stprint(f" - +{spec} Fishing Skill")
                             elif reward == "luck":
-                                stprint(f" - x{spec} Fishing Luck")
+                                stprint(f" - +{spec} Base Fishing Luck")
                             elif reward == "money": 
                                 stprint(f" - +{spec} coins!")
                             elif reward in zones:
                                 stprint(f" - {display_names['zones'][reward]} unlocked!")
                             elif reward == "shack":
-                                stprint(f" - Unlocked the [home] command")
+                                stprint(f" - Unlocked the [home] command + [setlines] command")
                         
                         selected_quest_data['status'] = "complete"
                     
@@ -1263,8 +1267,9 @@ def inventory(player):
     rod_code = player.gear["rod"]
     bait_code = player.gear["bait"]
     luck_marker = f"(+{rods[rod_code][1]} luck)" if rods[rod_code][1] > 1 else ""
+    
     stprint(f"Rod: {display_names['rods'][rod_code]} (+{rods[rod_code][0]} skill) {luck_marker}")
-    stprint(f"Bait: {display_names['baits'][bait_code]} (+{baits[bait_code]} skill)\n")
+    stprint(f"Bait: {display_names['baits'][bait_code]} (+{baits[bait_code]} skill, +{bait_luck[bait_code]}% luck)\n")
     
     stprint("Fish:")
     for fish_key, quantity in player.inventory["fish"].items():
@@ -1307,15 +1312,94 @@ def shack(player):
 
 def shack_int(player):
     while True:
-        command = input("Home>")
+        print(f"\n=== {player.name}'s Shack ===")
+        stprint("[1] --- Rest/Sleep")
+        stprint("[2] --- View Journal (Stats)")
+        stprint("[0] --- Exit Shack")
+
+        command = input(">")
         match command:
-            case "exit" | "leave" | "return": 
+            case "exit" | "leave" | "return" | "0": 
                 tprint("You exit the cabin.")
                 break
-            case "sleep" | "rest":
+            case "sleep" | "rest" | "1":
                 sleep_shack(player)
+                continue
+            case "2" | "journal" | "stats":
+                view_journal(player)
+                continue
+            case _:
+                stprint("That's not a valid command.")
+                continue
         
     return
+
+
+def view_journal(player): 
+    tprint("You open your weathered journal...")
+    time.sleep(0.5)
+    print("\n" + "="*40)
+    stprint(f"  {player.name}'s Fishing Records")
+
+    #base stats
+    stprint("\n--- Fisher Profile ---")
+    stprint(f"Fishing Skill: {player.fishing_skill}")
+    stprint(f"Natural Luck: {player.luck}")
+
+    #gears, luck &skill
+    rod = player.gear["rod"]
+    bait = player.gear["bait"]
+    rod_skill, rod_luck = rods[rod]
+    bait_skill = baits[bait]
+    bait_luck_buff = bait_luck[bait] #my bad code - bait skill and luck should've been kept together like in rods, but my bait luck was added later. -_buff to prevent name overlap.
+
+    stprint(f"\n--- Current Equipment ---")
+    stprint(f"Rod: {display_names['rods'][rod]}")
+    stprint(f"--   +{rod_skill} skill, +{rod_luck} luck")
+    stprint(f"Bait: {display_names['baits'][bait]}")
+    stprint(f"--   +{bait_skill} skill, +{bait_luck_buff} luck")
+
+    total_skill = player.skill + rod_skill + bait_skill
+    total_luck = player.luck + bait_luck_buff + rod_luck
+
+    stprint(f"\n--- Effective Totals ---")
+    stprint(f"Total Fishing Skill: {total_skill}")
+    stprint(f"Total Luck: {total_luck:.2f}")
+
+    #fish
+    stprint(f"\n--- Discoveries ---")
+    total_fish = len(fish_classes.keys())
+    discovered_fish = len(player.dex.keys())
+    stprint(f"Fish Species: {discovered_fish}/{total_fish} ({discovered_fish/total_fish*100:.0f}%)")
+    stprint(f"Total Catches: {sum(player.dex.values())}")
+            
+    top_fish = max(player.dex.items(), key=lambda x: x[1]) #fancy lambda, to return both the name and the value
+    fish_name = fish_displays[top_fish[0]]
+    stprint(f"Most Caught: {fish_name} ({top_fish[1]} times)")
+
+    stprint(f"\n--- Waters Explored ---")
+    for zone_code, unlocked in zones.items():
+        if unlocked:
+            zone_name = display_names['zones'][zone_code]
+            zone_fish = 0 #this is a number cause we're not taking a list of names - we only need the number of fish found.
+            zone_discovered = 0
+            for fish_id, fish_class in fish_classes.items():
+                fish_instance = fish_class()
+                zone_index = list(zones.keys()).index(zone_code) #zone code is internal name
+                if zone_index in fish_instance.zones: 
+                    zone_fish += 1
+                    if fish_id in player.dex:
+                        zone_discovered += 1
+            
+            if zone_fish > 0:
+                percent = (zone_discovered/zone_fish)*100
+                stprint(f"{zone_name}: {zone_discovered}/{zone_fish} ({percent:.0f}%)")
+    
+    print("\n" + "="*40)
+    tprint("Press <enter> to close journal...")
+    input("> ")
+    
+
 
 def sleep_shack(player):
     global turn, time_of_day
@@ -1328,10 +1412,10 @@ def sleep_shack(player):
 
         return
     else:
-        turn = 1
-        time_of_day = "day"
+        full_cycle = PERIOD_LENGTH * 2
+        #push to new morning
+        turn = ((turn // full_cycle) + 1) * full_cycle
         time.sleep(1.5)
-        print(" --- The sun rises on the horizon. It's day.")
 
         manage_time()
     return
@@ -1394,6 +1478,7 @@ def logbook(player):
             fish_external = fish_displays[selected_fish]
             fish_internal = selected_fish
             instance = fish_classes[selected_fish]()
+            difficulty = instance.difficulty
             zone_names = []
             for zone_index in instance.zones:
                 zone_codes = list(zones.keys())
@@ -1404,7 +1489,8 @@ def logbook(player):
             tprint(f"{fish_descriptions[fish_internal]}")
             stprint(f"Caught {player.dex.get(selected_fish, 0)} times.")  
             stprint(f"Found in {', '.join(zone_names)}.")
-            stprint(f"{instance.day_rarity} during the day; {instance.night_rarity} at night.")
+            stprint(f"{instance.day_rarity.lower()} during the day; {instance.night_rarity.lower()} at night.")
+            stprint(f"Strength: {difficulty}")
             if hasattr(instance, "drops"):
                 drop_list = [f"{display_names['drops'].get(drop, drop)} ({chance*100:.0f}%)" 
                             for drop, chance in instance.drops.items()]
@@ -1565,7 +1651,6 @@ def stprint(line, delay=0.07):
 
 
 def spawn_fish(player_zone, time_of_day):
-
     possible_fish = [] #possible fish - in this zone
     
     current_bait = player.gear["bait"]
@@ -1575,8 +1660,10 @@ def spawn_fish(player_zone, time_of_day):
     player.inventory["baits"][current_bait] -= 1
     
 
-    tprint(f"You flick the rod, and the line arcs over the water...", 0.007)
-    time.sleep(random.uniform(1, 5))
+    
+    if not setting_lines: 
+        tprint(f"You flick the rod, and the line arcs over the water...", 0.007)
+        time.sleep(random.uniform(1, 5))
 
     if time_of_day == "night" and current_bait == "lunar_lure": #checks for the lunar lure - only allows nocturnal and glow to be caught
         for fish_name, fish_class in fish_classes.items():
@@ -1587,6 +1674,8 @@ def spawn_fish(player_zone, time_of_day):
         for fish_name, fish_class in fish_classes.items(): #normal spawn
             fish_instance = fish_class()
             if player_zone in fish_instance.zones:
+                if time_of_day == "night" and fish_instance.night_rarity == "Not Found": continue
+                elif time_of_day == "day" and fish_instance.day_rarity == "Not Found": continue
                 possible_fish.append(fish_instance)
     
     if not possible_fish:
@@ -1594,7 +1683,9 @@ def spawn_fish(player_zone, time_of_day):
     
     
     current_rod = player.gear['rod']
-    effective_luck = player.luck * rods[current_rod][1] 
+    current_bait = player.gear['bait']
+    effective_luck = player.luck + rods[current_rod][1] + bait_luck[current_bait]
+    if setting_lines: effective_luck *= 0.5
 
     if current_weather == "Clear": effective_luck *= 1.15
     if current_weather == "Stormy": effective_luck *= 0.8
@@ -1628,11 +1719,50 @@ def spawn_fish(player_zone, time_of_day):
         fish_spawned = random.choice(fish_in_roll) 
         return fish_spawned
 
+def manage_fish():
+    global player
+    fished = spawn_fish(player.zone, time_of_day)
+    if fished == None: 
+        print("Nothing but seaweed. Eugh.")
+        return
+    else: 
+        rarity = fished.day_rarity if time_of_day == "day" else fished.night_rarity
+        if not setting_lines:
+            tprint(f"Tug - something's on the line! It's a {fished.name} ({rarity}) || Press <enter> to reel... ", 0.008)
+            if rarity in ["Extremely Rare", "Legendary"]:
+                stprint("\n")
+                stprint("!!! " * 8)
+                tprint(f"==== YOU'VE HOOKED A {rarity.upper()} FISH! ====")
+                stprint("!!! " * 8)
+            flush_input()
+            input("> ")
+        reeled = reel_fish(player, fished, time_of_day)
+        if reeled:
+            if hasattr(fished, "drops"):
+                for item, rarity in fished.drops.items():
+                    if random.random() <= rarity:
+                        if not setting_lines:
+                            print(f"The {fished.name} dropped 1 {display_names['drops'][item]}!")
+                        player.inventory["items"][item] = player.inventory["items"].get(item, 0) + 1
+                        #setlines
+                        if setting_lines:
+                            caught_while_setlines["drops"][item] = caught_while_setlines["drops"].get(item, 0) + 1
+
+            internal_fished = fish_name_map[fished.name]
+            player.dex[internal_fished] = player.dex.get(internal_fished, 0) + 1
+            if player.dex[internal_fished] == 1: #your first catch
+                print(f"Your first {fished.name} catch! Added to [logbook].") #NO need to check because no new catches allowed while setline
+        
+
 
 def reel_fish(player, fish, time_of_day,tick_duration=0.4):
-
+    fish_internal_name = fish_name_map[fish.name]
+    if fish_internal_name not in player.dex.keys() and setting_lines: #ONLY IF SETTING LINES, GIVE THE FISH FREEDOM IF NO DISCOVERED
+        return False
+    
     if random.randint(1, 100) <= fish.escape_chance(player.fishing_skill, time_of_day, player.gear["bait"]):
-        print(f"Oop- the fish wriggles free!")
+        if not setting_lines:
+            print(f"Oop- the fish wriggles free!")
         return False
     
     success_texts = [
@@ -1667,8 +1797,8 @@ def reel_fish(player, fish, time_of_day,tick_duration=0.4):
     #lunar bait calc
     if time_of_day == "night" and player.gear['bait'] == "lunar_lure": effective_skill += 4
 
-
     for i in range(ticks):
+        #we cap progress chance at 0.85.just to make it a little funner.
         progress_chance = min(0.85, 0.4 + (0.05 * effective_skill) - (0.03 * effective_difficulty))
         rng = random.random()
         if rng < progress_chance:
@@ -1678,55 +1808,136 @@ def reel_fish(player, fish, time_of_day,tick_duration=0.4):
         filled = int(progress / 100 * bar_length)
         if random.random() < 0.1 and "jumpy" in fish.traits:
             progress = int(max(0, progress -  (progress * 0.20)))
-            print("The fish thrashes! You lose 20% of progress!")
+            if not setting_lines:
+                print("The fish thrashes! You lose 20% of progress!")
 
         bar = "█" * filled + "░" * (bar_length - filled)
-        print(f"Reeling >>> [{bar}] {progress}%")
+        if not setting_lines:
+            print(f"Reeling >>> [{bar}] {progress}%")
 
         if progress >= 100:
-            print(random.choice(success_texts))
+            if not setting_lines:
+                print(random.choice(success_texts))
             internal = fish_name_map[fish.name]
             player.inventory["fish"][internal] = player.inventory["fish"].get(internal, 0) + 1
+            caught_while_setlines["fish"][internal] = caught_while_setlines["fish"].get(internal, 0) + 1
             return True
 
-        time.sleep(tick_duration)
-        i += 1
+        
+        if not setting_lines:
+            time.sleep(tick_duration)
+        i += 1 
 
-    print(random.choice(fail_texts))
+    if not setting_lines:
+        print(random.choice(fail_texts))
     return False
 
 def zone_info(player):
-    print(f"\n--- Fish in {display_names['zones'][list(zones.keys())[player.zone]]} ---")
+    zone_name = display_names['zones'][list(zones.keys())[player.zone]]
+    stprint(f"\n--- {zone_name} ---")
     
+    flavor_texts = {
+        0: "Calm, shallow waters perfect for beginners.",
+        1: "A flowing creek with deeper pools and faster currents.",
+        2: "Crystal-clear brook where light dances on the surface.",
+        3: "Deep, mysterious lake with secrets in its depths."
+    }
+    
+    stprint(flavor_texts.get(player.zone, "???"))
+    
+
+    if time_of_day == "night":
+        stprint("The darkness makes fishing challenging.")
+    if current_weather == "Rainy":
+        stprint("Rain patters on the water's surface.")
+
     current_zone_fish = []
     for fish_name, fish_class in fish_classes.items():
         fish_instance = fish_class()
+        rarity = fish_instance.day_rarity if time_of_day == "day" else fish_instance.night_rarity
         if player.zone in fish_instance.zones:
-            current_zone_fish.append(fish_instance)
+            if rarity != "Not Found":
+                current_zone_fish.append(fish_instance)
     
     if not current_zone_fish:
-        print("No fish here at the moment.")
+        print("No fish can be found at this time...")
+        tprint("Press <enter> to continue...")
+        input("> ")
+        return
+    stprint("Fish you've discovered here:")
+    discovered_any = False
+    for fish in current_zone_fish:
+        fish_internal = fish_name_map[fish.name]
+        if fish_internal in player.dex.keys():
+            rarity = fish.day_rarity if time_of_day == "day" else fish.night_rarity
+            stprint(f"{fish.name} - {rarity}")
+            discovered_any = True
+        else:
+            stprint(f"??? - ???")
+    
+    if not discovered_any:
+        stprint("You haven't discovered any fish here yet. Keep fishing!")
+    
+    print("Press <enter> to continue...")
+    input("> ")
+
+def setlines(quantity):
+    global turn, setting_lines, caught_while_setlines
+    
+    caught_while_setlines = {
+        "fish": {},
+        "drops": {}
+    }
+    #VALID SETLINES CHECKS
+
+    if not quantity.isdigit():
+        print("Bad usage - quantity must be a number!")
+        return
+    quantity = int(quantity)
+    if quantity > 200:
+        print("Maximum lines set is 200.")
+        return
+    if quantity < 1:
+        print("You must set a minimum of one line.")
+        return
+    current_bait = player.gear["bait"]
+    current_bait_quantity = player.inventory["baits"].get(current_bait, 0) #CANNOT USE MORE THAN YOU HAVE IN BAIT, cannot set with worms. HARD CAP OF 200 SETLINES
+    if quantity > current_bait_quantity:
+        print(f"You can't set that many lines - you only have {current_bait_quantity} {current_bait}.")
+        return
+    if current_bait == "worm": 
+        print("Worms dissolve too quickly to use in setlines. Try insects or better bait..")
         return
     
-    for fish in current_zone_fish:
-        trait_str = ""
-        if "nocturnal" in fish.traits:
-            trait_str += "[Nocturnal] "
-        if "glow" in fish.traits:
-            trait_str += "[Glows] "
-        if "fast" in fish.traits:
-            trait_str += "[Fast] "
-        if "strong" in fish.traits:
-            trait_str += "[Strong] "
-        if "jumpy" in fish.traits:
-            trait_str += "[Jumpy] "
-        if "evasive" in fish.traits:
-            trait_str += "[Evasive] "
-        if "camouflage" in fish.traits:
-            trait_str += "[Camouflage]"
 
-        rarity = fish.day_rarity if time_of_day == "day" else fish.night_rarity
-        print(f"- {fish.name} | {rarity}")
+    setting_lines = True
+    turns_used = math.ceil(quantity/10)
+    for _ in range(quantity):
+        spawn_fish()
+    tprint("You set your lines and wait awhile.")
+    time.sleep(2)
+    tprint(f"\nLines set, fish caught. {turns_used} hours have passed. Results:")
+    stprint("\n-- Fish:\n")
+    for fish, amount in caught_while_setlines["fish"].items():
+        display = fish_displays[fish]
+        stprint(f">>> {display}: x{amount}")
+    stprint("\n-- Drops:\n")
+    for drop, amount in caught_while_setlines["drops"].items():
+        display_name = display_names["drops"][drop]
+        stprint(f">>> {display_name}: x{amount}")
+    stprint(f"\n{quantity} bait used.")
+    
+    turn+= turns_used
+    manage_time()
+
+    setting_lines = False
+
+    
+    
+
+
+
+
 
 def show_commands():
     stprint("\n=== COMMANDS ===")
@@ -1734,12 +1945,14 @@ def show_commands():
     stprint("inventory - Check your gear, fish, and items")
     stprint("rods - Switch between your fishing rods")
     stprint("baits - Change your equipped bait")
-    stprint("shop - Visit The Tackle Chest (day only)")
-    stprint("workshop - Visit Craftsman Borin (night only)")
+    stprint("shop - Visit the shop (day only)")
+    stprint("workshop - Visit the Workshop (night only)")
     stprint("zones - Travel between fishing spots")
+    stprint("setlines <quantity> - Set multiple lines at once for quick results (requires bait, reduced luck)")
     stprint("logbook - View discovered fish and info")
-    stprint("info - See what fish are in current zone")
-    stprint("commands - Show this list\n")
+    stprint("home - Enter your shack")
+    stprint("info - A little information about current zone")
+    stprint("help - Show this list\n")
 
 #print slowly - typewriter print
 def tprint(text, delay=0.013):
@@ -1766,7 +1979,7 @@ def start_game_exposition(player):
     tprint("workshop - Crafting and quests (night only)", 0.01)
     tprint("zones - Travel to new fishing spots", 0.01)
     tprint("logbook - Track your discoveries", 0.01)
-    tprint("commands - Displays all command keys")
+    tprint("help - Displays all command keys")
     time.sleep(1)
     
     tprint("\nThe water ripples gently. Your journey begins...", 0.03)
@@ -1774,27 +1987,44 @@ def start_game_exposition(player):
 
 def manage_time():
     global turn, time_of_day, current_hour, weather_timer, current_weather
-    weather_timer -= 1
-    if weather_timer <=0:
+    
+    weather_timer -= 1 #WEATHER
+    if weather_timer <= 0:
         current_weather = random.choice(weather_types)
         weather_timer = 48
         stprint(weather_announces[current_weather])
-    if turn >= PERIOD_LENGTH:
-        turn = 1
+
+    
+    turn += 1
+
+    #period
+    #floor division finds out how many blocks have passed, ignoring remainder of turns not yet a full period.
+    #if blocks passed is even (0, 2, 4...), day. If odd, night. i used AI to teach me this solution. sources from reddit, stackexchange.
+    periods_passed = turn // PERIOD_LENGTH
+    new_time_of_day = "day" if periods_passed % 2 == 0 else "night"
+
+    
+    if new_time_of_day != time_of_day:
+        time_of_day = new_time_of_day
         if time_of_day == "day":
-            print(" --- The sun sets. Night falls.")
-            time_of_day = "night"
-        elif time_of_day == "night":
             print(" --- The sun rises on the horizon. It's day.")
-            time_of_day = "day"
+        else:
+            print(" --- The sun sets. Night falls.")
+
+    #modulo gives me the remainder, where floor division gives the full blocks.
+    
+    cycle_step = turn % PERIOD_LENGTH
+    
     if time_of_day == "day":
-        current_hour = 5 + turn 
-        print(f"--- {current_hour}:00 | Day | {current_weather} {weather_descs[current_weather]}")
-    else: 
-        current_hour = 17 + turn - 1  
+        #day starts at 6 (modulo gives 0, +6 = 6am)
+        current_hour = 6 + cycle_step
+    else:
+        #night, 6pm
+        current_hour = 18 + cycle_step
         if current_hour >= 24:
             current_hour -= 24
-        print(f"--- {current_hour}:00 | Night | {current_weather} {weather_descs[current_weather]}")
+
+    print(f"--- {current_hour:02d}:00 | {time_of_day.capitalize()} | {current_weather} {weather_descs[current_weather]}")
 
 start_game_exposition(player)
 while True:
@@ -1804,40 +2034,19 @@ while True:
     check_quest_unlocked(player)
     
     manage_time()
+    flush_input()
+
     command = input("> ")
-    if command in ["f", "fish"]:
-        fished = spawn_fish(player.zone, time_of_day)
-        if fished == None: 
-            print("Nothing but seaweed. Eugh.")
-            turn+=1
-            continue
-        else: 
-            rarity = fished.day_rarity if time_of_day == "day" else fished.night_rarity
-            tprint(f"Tug - something's on the line! It's a {fished.name} ({rarity}) || Press <enter> to reel... ", 0.008)
-            if rarity in ["Extremely Rare", "Legendary"]:
-                stprint("\n!!! " * 8)
-                tprint(f"==== YOU'VE HOOKED A {rarity.upper()} FISH! ====")
-                stprint("!!! " * 8)
-            input("> ")
-            reeled = reel_fish(player, fished, time_of_day)
-            if reeled:
-                if hasattr(fished, "drops"):
-                    for item, rarity in fished.drops.items():
-                        if random.random() <= rarity:
-                            print(f"The {fished.name} dropped 1 {display_names['drops'][item]}!")
-                            player.inventory["items"][item] = player.inventory["items"].get(item, 0) + 1
-                        turn+=1
-                        continue
-                internal_fished = fish_name_map[fished.name]
-                player.dex[internal_fished] = player.dex.get(internal_fished, 0) + 1
-                if player.dex[internal_fished] < 2:
-                    print(f"Your first {fished.name} catch! Added to [logbook].")
-            turn+=1
-            continue
+    para_command = command.split() #creates list in case cmd is longer than 1
+
 
 
                         
-    match command:
+    match para_command[0]:
+            case "f" | "fish":
+                manage_fish()
+                turn+=1
+                continue
             case "shop":
                 shop(player)
                 turn += 1
@@ -1883,7 +2092,21 @@ while True:
             case "shack" | "home" | "house":
                 shack(player)
                 continue
+        
+            case "set" | "setlines":
+                if not player.shack["unlocked"]:
+                    print("You can't set lines yet...")
+                    continue
+                if len(para_command) < 2:
+                    stprint("Bad usage - try again with setlines <quantity>")
+                    continue
+                setquantity = para_command[1]
+                setlines(setquantity)
+
+                
+                
                 
             case _:
                 stprint("That's not a valid command.")
                 continue
+        
