@@ -1628,14 +1628,17 @@ def switch_zone(player):
             unlocked_list.append(zone_code)
     print("[0] --- Back\n")
 
+
     selection = input("> ")
 
+    if selection == "0":
+        return
     if not selection.isdigit():
         print("That's not an option...")
         return
     selection = int(selection)
     
-    if selection < 0 or selection > len(unlocked_list):
+    if selection < 1 or selection > len(unlocked_list):
         print("That's not an option...")
         return
     zone_display = display_names['zones'][unlocked_list[selection - 1]]
@@ -1916,7 +1919,7 @@ def setlines(quantity, player, time_of_day):
     setting_lines = True
     turns_used = math.ceil(quantity/10)
     for _ in range(quantity):
-        spawn_fish(player.zone, time_of_day)
+        manage_fish()
     tprint("You set your lines and wait awhile.")
     time.sleep(2)
     tprint(f"\nLines set, fish caught. {turns_used} hours have passed. Results:")
