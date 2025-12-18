@@ -63,7 +63,7 @@ class PondPerch(Fish):
             night_rarity = "Rare",
             zones = [0]
         )
-        self.drops = {"iron_shard": 0.04}
+        self.drops = {"iron_shard": 0.1}
 
 class NightGoby(Fish):
     def __init__(self):
@@ -75,7 +75,7 @@ class NightGoby(Fish):
             night_rarity = "Uncommon",
             zones = [0]
         )
-        self.drops = {"iron_shard": 0.05}
+        self.drops = {"iron_shard": 0.1}
 
 class Shimmerfin(Fish):
     def __init__(self):
@@ -118,11 +118,11 @@ class Glowfish(Fish):
             name = "Glowfish",
             difficulty = 4,
             traits = ["glow"],
-            day_rarity = "Very Rare",
-            night_rarity = "Rare",
+            day_rarity = "Not Found",
+            night_rarity = "Uncommon",
             zones = [1]
         )
-        self.drops = {"glow_scale": 0.6}
+        self.drops = {"glow_scale": 0.65}
 
 class Frogfish(Fish):
     def __init__(self):
@@ -154,7 +154,7 @@ class CrystalKoi(Fish):
             traits = ["glow"],
             day_rarity = "Very Rare",
             night_rarity = "Very Rare",
-            zones = [2]
+            zones = [2,3]
         )
 
 class RapidfinTrout(Fish):
@@ -167,7 +167,7 @@ class RapidfinTrout(Fish):
             night_rarity='Uncommon',
             zones=[2]
         )
-        self.drops = {'river_pearl': 0.1}
+        self.drops = {'river_pearl': 0.23}
 
 class BrookCarp(Fish):
     def __init__(self):
@@ -190,7 +190,7 @@ class BrookPerch(Fish):
             night_rarity="Rare",
             zones = [2,3]
         )
-        self.drops = {"river_pearl": 0.05}
+        self.drops = {"river_pearl": 0.2}
 
 class Shadowfin(Fish):
     def __init__(self):
@@ -210,10 +210,10 @@ class AzureGill(Fish):
             difficulty=4,
             traits = ['glow', "jumpy"],
             day_rarity = "Rare",
-            night_rarity="Very Rare",
+            night_rarity="Not Found",
             zones=[2]
         )
-        self.drops = {"azure_fin": 0.3}
+        self.drops = {"azure_fin": 0.4}
 
 class MoonlightGuppy(Fish):
     def __init__(self):
@@ -273,7 +273,7 @@ class LunarTrout(Fish):
             night_rarity="Uncommon",
             zones=[3]
         )
-        self.drops={"moonstone": 0.4}
+        self.drops={"moonstone": 0.45}
 
 class GhostCarp(Fish):
     def __init__(self):
@@ -285,5 +285,5 @@ class GhostCarp(Fish):
             night_rarity='Legendary',
             zones=[3]
         )
-        self.drops = {"spectral_fin", 0.8}
+        self.drops = {"spectral_fin": 0.8}
 
