@@ -21,7 +21,8 @@ PERIOD_LENGTH = 12
 setting_lines = False
 caught_while_setlines = {
     "fish": {},
-    "drops": {}
+    "drops": {},
+    "escaped": 0
 }
 quests= {
     "bridge_to_misty_creek": {
@@ -1373,9 +1374,13 @@ def view_journal(player):
     stprint(f"Fish Species: {discovered_fish}/{total_fish} ({discovered_fish/total_fish*100:.0f}%)")
     stprint(f"Total Catches: {sum(player.dex.values())}")
             
-    top_fish = max(player.dex.items(), key=lambda x: x[1]) #fancy lambda, to return both the name and the value
+    top_fish = max(player.dex.items(), key=lambda x: x[1], default=None) #fancy lambda, to return both the name and the value
+
     fish_name = fish_displays[top_fish[0]]
-    stprint(f"Most Caught: {fish_name} ({top_fish[1]} times)")
+    if top_fish:
+        stprint(f"Most Caught: {fish_name} ({top_fish[1]} times)")
+    else:
+        print("You haven't caught any fish...")
 
     stprint(f"\n--- Waters Explored ---")
     for zone_code, unlocked in zones.items():
@@ -1764,6 +1769,8 @@ def manage_fish():
 def reel_fish(player, fish, time_of_day,tick_duration=0.4):
     fish_internal_name = fish_name_map[fish.name]
     if fish_internal_name not in player.dex.keys() and setting_lines: #ONLY IF SETTING LINES, GIVE THE FISH FREEDOM IF NO DISCOVERED
+        caught_while_setlines["escaped"] += 1
+
         return False
     
     if random.randint(1, 100) <= fish.escape_chance(player.fishing_skill, time_of_day, player.gear["bait"]):
@@ -1892,7 +1899,8 @@ def setlines(quantity, player, time_of_day):
     
     caught_while_setlines = {
         "fish": {},
-        "drops": {}
+        "drops": {},
+        "escaped": 0
     }
     #VALID SETLINES CHECKS
 
@@ -1932,6 +1940,7 @@ def setlines(quantity, player, time_of_day):
         display_name = display_names["drops"][drop]
         stprint(f">>> {display_name}: x{amount}")
     stprint(f"\n{quantity} bait used.")
+    tprint(f"{caught_while_setlines['escaped']} undiscovered fish escaped...")
     
     turn+= turns_used
     manage_time()
