@@ -2038,7 +2038,8 @@ while True:
 
     command = input("> ")
     para_command = command.split() #creates list in case cmd is longer than 1
-
+    if len(para_command) < 1:
+        continue
 
 
                         
