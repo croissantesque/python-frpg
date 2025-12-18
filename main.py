@@ -1723,7 +1723,8 @@ def manage_fish():
     global player
     fished = spawn_fish(player.zone, time_of_day)
     if fished == None: 
-        print("Nothing but seaweed. Eugh.")
+        if not setting_lines:
+            print("Nothing but seaweed. Eugh.")
         return
     else: 
         rarity = fished.day_rarity if time_of_day == "day" else fished.night_rarity
@@ -1750,6 +1751,8 @@ def manage_fish():
 
             internal_fished = fish_name_map[fished.name]
             player.dex[internal_fished] = player.dex.get(internal_fished, 0) + 1
+            if setting_lines:
+                caught_while_setlines["fish"][internal_fished] = caught_while_setlines["fish"].get(internal_fished, 0) + 1
             if player.dex[internal_fished] == 1: #your first catch
                 print(f"Your first {fished.name} catch! Added to [logbook].") #NO need to check because no new catches allowed while setline
         
@@ -1818,9 +1821,9 @@ def reel_fish(player, fish, time_of_day,tick_duration=0.4):
         if progress >= 100:
             if not setting_lines:
                 print(random.choice(success_texts))
+                
             internal = fish_name_map[fish.name]
             player.inventory["fish"][internal] = player.inventory["fish"].get(internal, 0) + 1
-            caught_while_setlines["fish"][internal] = caught_while_setlines["fish"].get(internal, 0) + 1
             return True
 
         
