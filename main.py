@@ -2070,9 +2070,11 @@ while True:
 
             case "baits":
                 switch_bait(player)
-                for bait,quantity in player.inventory["baits"].items():
-                    if quantity <=0:
-                        del player.inventory["baits"][bait]
+                player.inventory["baits"] = { #delete empty baits. rebuild the whole thing, BUT only rebuild the set if quantity is > 0. 
+                    bait: quantity
+                    for bait, quantity in player.inventory["baits"].items()
+                    if quantity > 0
+                }
                 continue
 
             case "rods":
